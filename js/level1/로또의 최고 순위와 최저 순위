@@ -32,3 +32,15 @@ function solution(lottos, win_nums) {
 
 /// 두번째 풀이
 
+function solution(lottos, win_nums) {
+    const rank = [6, 6, 5, 4, 3, 2, 1];
+
+    let win=0, zero=0;
+    lottos.forEach(item =>{
+        if(win_nums.includes(item)) win++;
+        if(item === 0) zero++;
+    })
+
+    return [rank[win+zero], rank[win]];
+}
+

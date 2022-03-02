@@ -1,0 +1,34 @@
+
+
+/// 첫번재 풀이
+
+function rank(num){
+    let rank_num = 7 - num;
+    if(rank_num >= 6) return 6;
+    else return rank_num;
+}
+
+function solution(lottos, win_nums) {
+    
+    var answer = [];
+    let win_arr = lottos.filter(item1 => {
+        return win_nums.some((item2) => {
+            return item1 == item2
+        });
+    });
+    let zero_arr = lottos.filter(item1 => {
+        return item1 == 0;
+    });
+    
+    let win_length = win_arr.length;
+    let zero_length = zero_arr.length;
+    
+    answer.push(rank(zero_length+win_length));
+    answer.push(rank(win_length));
+    
+    return answer;
+}
+
+
+/// 두번째 풀이
+

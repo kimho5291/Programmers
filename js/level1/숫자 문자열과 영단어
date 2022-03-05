@@ -1,0 +1,20 @@
+
+
+
+///첫번째 풀이 
+
+function solution(s) {
+    s = s
+        .replace(/nine/g, "9")
+        .replace(/eight/g, "8")
+        .replace(/seven/g, "7")
+        .replace(/six/g, "6")
+        .replace(/five/g, "5")
+        .replace(/four/g, "4")
+        .replace(/three/g, "3")
+        .replace(/two/g, "2")
+        .replace(/one/g, "1")
+        .replace(/zero/g, "0");
+    return Number(s);
+}
+

@@ -1,0 +1,36 @@
+
+
+// 첫번째 풀이
+
+function solution(board, moves) {
+    var answer = 0;
+    var array_t = new Array();
+    moves.forEach(index =>{
+        index--;
+        for(var i=0; i<board.length; i++){
+            let item = board[i];
+            if(item[index] != 0){
+                let val = item[index];
+                let pop_val = array_t.pop();
+                
+                if(!pop_val){
+                    array_t.push(val);
+                }else{
+                    if(pop_val == val){
+                        answer+= 2;
+                    }else{
+                        array_t.push(pop_val);
+                        array_t.push(val);
+                    }
+                }
+                
+                item[index] = 0;
+                break;
+            }
+        }
+    });
+    
+    return answer;
+}
+
+

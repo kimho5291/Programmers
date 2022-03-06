@@ -1,0 +1,20 @@
+
+
+// 첫번째 풀이
+
+const number = [1,2,3,4,5,6,7,8,9,0];
+function solution(numbers) {
+    var answer = 0;
+    number.forEach(item =>{
+        if(!numbers.some(e =>  e == item))
+           answer += item;
+    });
+    return answer;
+}
+
+
+//두번째 풀이
+
+function solution(numbers) {
+    return 45 - numbers.reduce((sum, cur) => sum += cur, 0);
+}

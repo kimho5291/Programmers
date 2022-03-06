@@ -1,0 +1,57 @@
+
+
+// 첫 번째 풀이
+
+
+const pad = [['1','4','7','10'], ['2','5','8','0'], ['3','6','9','12']];
+// *=10, #=12 
+
+const findLocation = (value) => {
+    let temp_arr = [], x=0;
+    if(value%3 == 1) x = 0;
+    else if(value%3 == 0 && value != 0) x = 2;
+    else x = 1;
+    temp_arr.push(x);
+    temp_arr.push(pad[x].findIndex(e => e == value));
+    return temp_arr;
+}
+
+const findDistance = (a, b) => {
+    let x = Math.abs(a[0] - b[0]);
+    let y = Math.abs(a[1] - b[1]);
+    return x+y;
+}
+
+var hand_L = '10', hand_R = '12';
+const useHand = (value, hand) =>{
+    if(hand == 'R') hand_R = value;
+    else hand_L = value;
+    return hand
+}
+
+function solution(numbers, hand) {
+    var answer = '';
+    numbers.forEach(item =>{
+        if(item%3 == 1) 
+            answer += useHand(item, 'L');
+        else if(item%3 == 0 && item != 0) 
+            answer += useHand(item, 'R');
+        else{
+            let L_loc = findLocation(hand_L);
+            let R_loc = findLocation(hand_R);
+            let item_loc = findLocation(item);
+            if(findDistance(item_loc, L_loc) > findDistance(item_loc, R_loc)){
+                answer += useHand(item, 'R');
+            }else if(findDistance(item_loc, L_loc) < findDistance(item_loc, R_loc)){
+                answer += useHand(item, 'L')
+            }else{
+                if(hand == "left") answer += useHand(item, 'L');
+                else answer += useHand(item, 'R');
+            }
+        }
+        
+    });
+    
+    return answer;
+    
+}

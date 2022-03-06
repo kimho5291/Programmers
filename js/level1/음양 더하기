@@ -1,0 +1,17 @@
+
+
+// 첫번째 풀이
+
+function solution(absolutes, signs) { 
+    return absolutes.map((item, index)=> {
+        if(!signs[index]) item *= -1;
+        return item;
+    }).reduce((sum, cur) => sum += cur, 0);
+}
+
+
+//두번째 풀이
+
+function solution(absolutes, signs) { 
+    return absolutes.reduce((sum, cur, i) => sum += (signs[i] ? cur : -cur), 0);
+}

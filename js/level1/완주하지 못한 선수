@@ -1,0 +1,24 @@
+
+
+// 시도 한것들
+//1. 차집합 -> participant.filter(e => !completion.includes(e)) -> 중복이 있는 관계로 실패
+//2. for문, splice -> 하나씩확인하면서 둘다 삭제하기 -> 정확성은 성공했으나 효율성에서 실패
+//3. participant을 String 형으로 변환한 후 completion를 하나씩 돌면서 new RegExp(item, "")을 활용해 replace 했지만 왜인지 정확성에서 실패
+//4. 주어진 두 array를 sort 시킨 후 participant을 돌면서 completion.findIndex 사용해 같은 값 제거 및 -1을 발견하면 답으로 제출 정확성 50점에 효율성 10 득점...
+//실패 4번 코드
+function solution(participant, completion) {
+    participant.sort();
+    completion.sort();
+    for(var i=0; i<participant.length;){
+        let find = completion.findIndex(e => e == participant[i]);
+        if(find != -1){
+            participant.splice(i,1);
+            completion.splice(find,1);
+        }else{
+            return participant[i];
+        }
+    }
+}
+
+
+

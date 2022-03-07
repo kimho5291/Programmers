@@ -1,0 +1,7 @@
+
+
+//첫번째 풀이 
+
+function solution(a, b) {
+    return a.reduce((sum, cur, index) => sum += cur * b[index],0);
+}

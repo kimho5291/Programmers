@@ -19,9 +19,18 @@ function solution(participant, completion) {
         }
     }
 }
+/*
+시간복잡도
+nlogn + nlogn + n*n+n => O(n^2) 
+ => for문 내 findIndex 때문에
+*/
+
+
+
 
 // 첫번째 성공 풀이
 // 두 배열을 sort 한 후 index를 기준으로 비교해서 다르면 return
+// 마지막 비교를 할때 'leo' != undefine 이런식으로 요소를 비교하기 때문에 마지막 요소 비교도 가능
 var answer = "";
 participant.sort();
 completion.sort();
@@ -35,6 +44,95 @@ for(var i=0; i<participant.length; i++){
 }
 return answer;
 
+/*
+시간복잡도
+nlogn + nlogn + n => O(nlogn)
+*/
 
+
+
+
+// 참고 후 풀이 코드
+function solution(participant, completion) {
+    return participant.find((name) => !completion[name]--, completion.map(name => completion[name] = (completion[name]|0)+1));
+}
+
+/*
+participant = 참가한 선수 명단
+completion = 완주한 선수 명단
+
+MDN 함수 원형 확인 -> findarray.find(callback[, thisArg])
+[, thisArg] 은 option 이라는 뜻이다. (option -> 선택적 사용 가능)
+thisArg은 callback이 호출될때 사용될 객채이기 때문에 코드의 실행 순서는 thisArg 실행 후 callback 순이다.
+
+
+** 코드 풀이
+
+1. 코드 : participant.find((name) => !completion[name]--, completion.map(name => completion[name] = (completion[name]|0)+1))
+* callback = (name) => !completion[name]--
+* thisArg  = completion.map(name => completion[name] = (completion[name]|0)+1)
+
+
+2. 코드 실행 순서 
+* thisArg -> callback
+
+
+3. thisArg 풀이
+* 코드 : completion.map(name => completion[name] = (completion[name]|0)+1)
+* array.map 함수는 array 내 모든 요소 각각 함수의 결과를 반영한 후 새로운 array 반환
+* 람다식을 사용해서 return 생략 
+1) completion.map(name => 
+ -> completion 내 모든 요소를 name으로 받은 후 함수를 진행한다. (Lamda 이용)
+2) completion[name] = (completion[name]|0)+1)
+ -> completion 내 completion[name]를 생성한다. 키-벨류(key-value) 
+ -> completion[name]은 completion[name]가 없으면 0+1, 있으면 completion[name] + 1 이다.
+ 
+ 예제)
+ completion = ["josipa", "filipa", "marina", "nikola"] 일때 
+ completion.map(name => completion[name] = (completion[name]|0)+1) 코드를 실행하면 
+ completion = 	[  'josipa',  'filipa',  'marina',  'nikola',  josipa: 1, filipa: 1,  marina: 1, nikola: 1] 처럼 값이 추가된다.
+ 
+
+4. callback 풀이
+* 코드 : (name) => !completion[name]--
+* 람다식을 사용해서 return 생략
+1) (name) =>
+ -> name은 participant의 모든 요소이며, 함수 실행
+2) !completion[name]--
+ -> completion 내 name인 키값이 없다면 true, 있다면 true 반환 (맨 앞 ! 때문에 반전하여 반환)
+ -> 후위연산자인 --를 통해 값 반환 이후 value 값 1 감소
+ 
+ 
+5. 코드 전체 예시
+participant = ["mislav", "stanko", "mislav", "ana"]
+completion = ["stanko", "ana", "mislav"]
+
+1) thisArg 실행 
+participant = ["mislav", "stanko", "mislav", "ana"]
+completion = [ 'stanko', 'ana', 'mislav', stanko: 1, ana: 1, mislav: 1 ]
+
+2) callback 실행
+ 1] name = mislav 실행 -> false 반환
+ completion = [ 'stanko', 'ana', 'mislav', stanko: 1, ana: 1, mislav: 0 ]
+ 
+ 2] name = stanko 실행 -> false 반환
+ completion = [ 'stanko', 'ana', 'mislav', stanko: 0, ana: 1, mislav: 0 ]
+ 
+ 3] name = mislav 실행 -> true 반환
+  -> true인 이유
+     * completion[stanko] = 0 이다.
+     * !를 통해 boolean으로 계산되기 때문에 0은 false로 변환
+     * !false = true 이기 때문에 true로 반환
+  
+3) callback에서 true return 이후
+ 1] callback에서 mislav 일때 true 반환 했기때문에 find 함수의 return 값은 "mislav" 이다.
+ 
+
+6. 시간복작도 
+callback의 시간복잡도 : 1*n = n => O(n)
+thisArg의 시간복잡도 : 1*n = n => O(n)
+총 코드의 시간복잡도 : n+n = 2n => O(n)
+
+*/
 
 

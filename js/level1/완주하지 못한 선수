@@ -20,5 +20,21 @@ function solution(participant, completion) {
     }
 }
 
+// 첫번째 성공 풀이
+// 두 배열을 sort 한 후 index를 기준으로 비교해서 다르면 return
+var answer = "";
+participant.sort();
+completion.sort();
+console.log(participant);
+console.log(completion);
+for(var i=0; i<participant.length; i++){
+    if(participant[i] != completion[i]){
+        answer = participant[i];
+        break;
+    }
+}
+return answer;
+
+
 
 

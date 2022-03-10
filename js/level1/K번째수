@@ -1,0 +1,18 @@
+
+// 첫번째 풀이
+//설명
+/*
+1. commands 길이와 정답 arr의 수가 같은 걸 보고 map 사용
+2. command[0], [1]와 slice를 활용해 원하는 만큼 배열 자르기
+3. arr.sort((a,b)=?a-b)를 사용해 배열 정렬 
+4. sort 함수이후 체이닝을 활용해 배열 요소 접근 => [command[2]] 
+*/
+
+function solution(array, commands) {
+    return commands.map(item => array.slice(item[0]-1, item[1]).sort((a,b)=>a-b)[(item[2]-1)]);
+}
+
+/*
+시간 복잡도
+1*n + 1*n + nlogn => O(nlogn)
+*/

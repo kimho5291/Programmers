@@ -1,0 +1,27 @@
+
+//첫번재 풀이
+//중복을 제거하기 위해 object 선언 후 갯수를 추가히면서 object 생성
+//for in 을 통해 object를 돌면서 nums.length/2 만큼 돌면서 최대 폰켓몬 수 추출
+
+function solution(nums) {
+    var answer = 0;
+    var object = {};
+    var temp = nums.forEach(item => object[item] = !object[item]?1:object[item]+1);
+    for(key in object){
+        if(answer < nums.length/2){
+            answer++;
+        }
+    }
+    return answer;
+}
+
+//두번째 풀이
+//Set 문법을 통해 중복 제거
+// ... (전개 구문)을 사용하여 new Set(num)에서 나온 값을 배열로 전개 ex)Set {1,2,3} 을 [1,2,3] 으로 변경 
+//arr의 길이가 max보다 크면 max 반환 또는 arr 길이가 적으면 arr 길이 반환
+
+function solution(nums) {
+    const max = nums.length / 2;
+    const arr = [...new Set(nums)];
+    return arr.length > max ? max : arr.length
+}

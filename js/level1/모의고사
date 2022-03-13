@@ -1,0 +1,58 @@
+
+
+//첫번째 풀이
+//수포자의 패턴을 정의해놓음
+//정답 arr을 돌면서 패턴과 맞는지 확인
+//최대값을 찾아서 정리
+//sort때문에 시간복잡도는 O(nlogn)
+
+function solution(answers) {
+    var answer = [];
+    let t1 = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+    let t2 = [2, 1, 2, 3, 2, 4, 2, 5];
+    let t3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+    let arr = [{index:1, answer:0}, {index:2, answer:0}, {index:3, answer:0}];
+    let temp10 = 0, temp8 = 0;
+    for(var index = 0; index<answers.length; index++){
+        temp10 = temp10%10;
+        temp8 = temp8%8;
+        
+        arr[0].answer += t1[temp10]==answers[index]?1:0;
+        arr[1].answer += t2[temp8++]==answers[index]?1:0;
+        arr[2].answer += t3[temp10++]==answers[index]?1:0;
+    }
+    arr.sort((a,b) => b.answer - a.answer);
+    let max = 0;
+    for(let i=0; i<arr.length; i++){
+        if(max <= arr[i].answer){
+            answer.push(arr[i].index);
+            max = arr[i].answer;
+        }
+    }
+    
+    return answer.sort();
+}
+
+//두번째 풀이
+//수포자 패턴 정의
+//filter를 통해 정답 찾기 및 수포자 정답 arr length 구하기
+//Math.max를 통해 최대 값 구하기
+//3회 if문을 통해 정렬없이 차례대로 번호넣기
+
+function solution(answers) {
+    var answer = [];
+    var t1 = [1, 2, 3, 4, 5];
+    var t2 = [2, 1, 2, 3, 2, 4, 2, 5];
+    var t3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+    
+    var t1a = answers.filter((item, i) => item==t1[i%t1.length]).length;
+    var t2a = answers.filter((item, i) => item==t2[i%t2.length]).length;
+    var t3a = answers.filter((item, i) => item==t3[i%t3.length]).length;
+    var max = Math.max(t1a, t2a, t3a);
+    
+    if(max == t1a) answer.push(1);
+    if(max == t2a) answer.push(2);
+    if(max == t3a) answer.push(3);
+    return answer;
+}
+

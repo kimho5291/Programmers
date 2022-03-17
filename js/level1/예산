@@ -1,0 +1,25 @@
+
+//첫번째 풀이
+//최대 포함할 수 있는 경우를 보기 위해 sort 를 우선 함
+//그후 하나씩 더하면서(빼면서) 조건 검사
+
+function solution(d, budget) {
+    d.sort((a,b) => a-b);
+    var answer = 0;
+    console.log(d);
+    for(key in d){
+        budget -= d[key];
+        if(budget<0) break;
+        answer++;
+    }
+    return answer;
+}
+
+// 두번째 풀이
+// sort 이후 filter 함수를 사용하여 첫 요소 부터 돌면서 bb의 값을 줄여간다,
+// (bb=bb-e,1) => bb=bb-e를 수행한 후 1을 반환
+//filter는 각 요소를 돌면서 true면 요소를 유지하고, false 면 버린다.
+
+function solution(d, bb) {
+    return d.sort((a,b) => a-b).filter(e => bb-e>=0?(bb=bb-e,1):0).length;
+}

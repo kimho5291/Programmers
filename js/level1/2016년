@@ -1,0 +1,10 @@
+
+//첫번째 풀이
+//Date 함수 사용
+//Date 함수의 월은 0 == 1월 인것을 인지한 후 -1 추가
+//getDay()는 0~6을 반환(요일)
+
+const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+function solution(a, b) {
+    return week[new Date(2016, a-1, b).getDay()];
+}

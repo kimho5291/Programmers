@@ -42,3 +42,117 @@ function solution(N, stages) {
     }
     return answer;
 }
+
+
+//성공한 풀이
+// 놓친 부분 : 만약 맨 마지막 스테이지에 도달 한 사람이 없으면 0/0이 되기때문에 NaN가 된다
+// 이걸 방지하기 위해 분모가 0이면 1로 처리한다.
+
+...
+
+var stage_len = stages.length;
+    for(key in temp_obj){
+        temp_obj[key]--;
+        let temp = temp_obj[key];
+        temp_obj[key] = temp_obj[key]/(stage_len<=0?1:stage_len);  // <- 처리한 부분 위코드의 25번 줄
+        stage_len = stage_len - temp;
+    }
+    console.log(temp_obj)
+
+...
+
+// 성공한 풀이 full code
+// 시간 복잡도 n + m + n + n * m => O(nm) 이지 않을까 싶다..
+// 시간 복잡도는 .. 어려워
+
+function solution(N, stages) {
+    var temp_obj = {};
+    for(var i=1; i<=N; i++){
+        temp_obj[i] = 1;
+    }
+    stages.forEach((item) => {
+        temp_obj[item]?temp_obj[item]++:0;
+    });
+    
+    var stage_len = stages.length;
+    for(key in temp_obj){
+        temp_obj[key]--;
+        let temp = temp_obj[key];
+        temp_obj[key] = temp_obj[key]/(stage_len<=0?1:stage_len);
+        stage_len = stage_len - temp;
+    }
+    
+    var answer = [];
+    while(answer.length < N){
+        let max = -1;
+        let max_index = 0;
+        for(key in temp_obj){
+            if(max < temp_obj[key]){
+                max = temp_obj[key];
+                max_index = key;
+            }
+        }
+        answer.push(Number(max_index));
+        delete temp_obj[max_index];
+    }
+    return answer;
+}
+
+
+
+
+// 참고한 풀이
+// 스테이지 별로 반복문을 돌면서
+// 현재 스테이지 보다 높거나 같은 사람 = reach_user => filter(e => e >= i)
+// 현재 스테이지에 머무는 사람 = cur => filter(e => e === i)
+// 을 찾은 후 배열에 삽입 후 sort를 활용하여 정렬
+// 해당 array의 길이와 답의 길이는 같은 것을 활용하여 map 함수 이용
+// answer.map(e => e[0])의 결과물은 실패율을 내림차순으로 정렬한 스테이지 배열이 나온다.
+
+// 시간 복잡도는 n * (m+m) + n log n => 2mn + n log n 
+// 복잡도는 .. O(2nm) 인지 O(nlogn) .. 잘모르겠다.. 계산식도 ..
+// 하여튼 내가 풀이한 방법보다 현저히 안좋은 실행속도를 보였다. (filter 때문)
+
+function solution(N, stages) {
+    var answer = [];
+    for(var i=1; i<=N; i++){
+        let reach_user = stages.filter(e => e >= i).length;
+        let cur_user = stages.filter(e => e === i).length;
+        answer.push([i, cur_user/reach_user]);
+    }
+    
+    answer.sort((a,b) => b[1] - a[1]);
+    return answer.map(e => e[0]);
+}
+
+
+//// 공부한 후 풀이한 code 
+// 우선 array 형 선언
+// 스테이지 길이만큼 array에 [스테이지, 머무르는 유저 or 실패율]이 들어갈 공간 선언
+// 주어진 유저별 머무르는 스테이지 배열을 돌면서 선언안 배열에 머무르는 유저를 쌓아준다.
+// 머무르는 유저의 실패율을 구해준다.
+// array.sort 함수를 이용해 실패율 별 내림차순 정렬을 해준다.
+// array.map을 활용해 실패율 기준 내림차순으로 정렬된 스테이지를 배열로 가져와 return 한다.
+
+// 시간복잡도 n + m + n + n lon g => O(nlogn)
+// 풀이한 code 중 제일 풀이시간이 적게 걸린다.
+
+function solution(N, stages) {
+    let stage_len = stages.length;
+    var temp_arr = new Array();
+    
+    for(var i=1; i<=N; i++){
+        temp_arr.push([i, 0])
+    }
+    
+    stages.forEach(item => item<=N?temp_arr[item-1][1]++:0);
+    
+    temp_arr.forEach((item, index) => {
+        let temp = item[1];
+        temp_arr[index][1] = temp/(stage_len<=0?1:stage_len);
+        stage_len = stage_len - temp;
+    })
+    
+    temp_arr.sort((a,b) => b[1]-a[1]);
+    return temp_arr.map(e => e[0]);
+}

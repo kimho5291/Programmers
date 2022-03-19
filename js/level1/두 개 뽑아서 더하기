@@ -1,0 +1,16 @@
+
+//풀이
+//Set => set 내 요소는 콜랙션 내 유일하다.(동일한 값은 저장하지 않음) -> MDN 설명 : 어떤 값은 그 Set 콜렉션 내에서 유일합니다
+//2중 for문을 사용하여 전체 요소를 돌면서 2개의 값을 더한 후 set에 add 한다.
+//[...set_arr] => ...(전개구문)을 사용하여 set 내 값을 가져와서 배열로 푼다.
+//.sort((a,b) => a-b) => sort를 사용하여 오름차순으로 정렬 후 return
+
+function solution(numbers) {
+    var set_arr = new Set();
+    for(var i=0; i<numbers.length; i++){
+        for(var j=i+1; j<numbers.length; j++){
+            set_arr.add(numbers[i]+numbers[j])
+        }
+    }
+    return [...set_arr].sort((a,b) => a-b);
+}

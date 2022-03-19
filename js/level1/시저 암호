@@ -1,0 +1,26 @@
+
+
+//첫번째 풀이
+//1. convert 함수
+//매개 변수로 받은 문자를 숫자로 변경 후 n을 더해준다
+//대소문자를 구분하여 범위를 초과하면 처음으로 되돌리기
+//숫자를 문자로 변경 후 return 
+//2. regex => 정규식의 공백을 표시
+//3. s.split("") => 문자열을 요소 하나씩 띄워서 배열로 변경
+//4. array.map을 사용하여 각 요소를 가져와서 
+//5. !regex.test(e) => 공백인지 확인한다. 공백이면 false, 아니면 true ,,,, ! 주의
+//6. ?convert(e, n):e => 공백이 아니면 1번의 convert 함수 실행, 아니면 그대로 반환
+//7. .join("") => map함수를 통해 생성된 새로운 배열을 join을 활용하여 하나의 문자열로 만듦
+
+
+const convert = (ascii, n) => {
+    let temp = ascii.charCodeAt() + n;
+    let limit = ascii == ascii.toLowerCase()?123:91;
+    if(temp >= limit) temp -= 26;
+    return String.fromCharCode(temp);
+}
+const regex = / /;
+function solution(s, n) {
+    return s.split("").map(e => !regex.test(e)?convert(e, n):e).join("");
+}
+

@@ -1,0 +1,44 @@
+
+
+//시도한 것들
+
+//첫번째 시도
+//1. 스테이지 수 만큼 object 요소 생성
+//2. 스테이지에 머무는 수 추가
+//3. 스테이지 실패율 구하기
+//4. 스테이지 실패율 내림차순으로 정렬
+// 했는데 70.4 점으로 실패 ...
+function solution(N, stages) {
+    var temp_obj = {};
+    for(var i=1; i<=N; i++){
+        temp_obj[i] = 1;
+    }
+    stages.forEach((item) => {
+        temp_obj[item]?temp_obj[item]++:0;
+    });
+    console.log(temp_obj)
+    
+    var stage_len = stages.length;
+    for(key in temp_obj){
+        temp_obj[key]--;
+        let temp = temp_obj[key];
+        temp_obj[key] = temp_obj[key]/stage_len;
+        stage_len = stage_len - temp;
+    }
+    console.log(temp_obj)
+    
+    var answer = [];
+    while(answer.length < N){
+        let max = -1;
+        let max_index = 0;
+        for(key in temp_obj){
+            if(max < temp_obj[key]){
+                max = temp_obj[key];
+                max_index = key;
+            }
+        }
+        answer.push(Number(max_index));
+        delete temp_obj[max_index];
+    }
+    return answer;
+}

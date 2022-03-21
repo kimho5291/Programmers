@@ -1,0 +1,27 @@
+
+
+//풀이
+//decimal == 소수 만드는 함수 2를 제외한 부분이 존재해야하는데 문제는 3개의 숫자를 더한 수가 2가 나올수 없어 제외함
+//소수 찾기 중 제곱근을 활용한 소수 알고리즘을 사용하여 소수 판별 시간복잡도는 O(√N)이다.
+
+//3중 for문을 통해 모든 경우의 수 판별하기
+
+const decimal = (number) =>{
+    for(let i=2; i<=Math.sqrt(number); i++){
+        if(number%i === 0)
+            return false;
+    }
+    return true;
+}
+function solution(nums) {
+    var answer = 0;
+    for(var i=0; i<nums.length; i++){
+       for(var j=i+1; j<nums.length; j++){
+            for(var k=j+1; k<nums.length; k++){
+                decimal(nums[i]+nums[j]+nums[k])?answer++:0;
+            }
+        } 
+    }
+    return answer;
+}
+

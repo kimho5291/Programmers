@@ -1,0 +1,73 @@
+
+// 풀이
+// id_list 만큼 사용할 object 를 생성한다.
+// report를 돌면서 신고한 유저와 신고받은 유저의 object를 돌면서 신고한 유저 id 추가 및 신고 당한 횟수를 추가한다.
+// report를 정리한 이후 k 횟수 만큼 신고당한 유저를 찾아 해당 유저를 신고한 유저에게 정지 메일을 보고받은 횟수를 추가한다.
+// array.map을 통해 id_list 순으로 정지메일을 보고받은 횟수를 뽑아와 return 한다.
+// 시간복잡도 n + m + n * n => O(n^2)
+
+function solution(id_list, report, k) {
+    var obj_arr = [];
+    id_list.forEach(item =>{
+        let temp_obj = {};
+        temp_obj.id = item;
+        temp_obj.k = 0;
+        temp_obj.report_list = [];
+        temp_obj.stop_list = [];
+        obj_arr.push(temp_obj);
+    })
+    
+    report.forEach(item => {
+        let split_arr = item.split(" ");
+        let temp_id = split_arr[0];
+        let stop_id = split_arr[1];
+        
+        let aa = obj_arr.findIndex(e => e.id == temp_id);
+        let bb = obj_arr.findIndex(e => e.id == stop_id);
+
+        if(obj_arr[aa].report_list.findIndex(e => e == stop_id) == -1){
+            obj_arr[aa].report_list.push(stop_id);
+            obj_arr[bb].k++;
+        }
+    })
+    
+    obj_arr.forEach(stop_id => {
+        if(stop_id.k >= k){
+            obj_arr.forEach(itemm =>{
+                if(itemm.report_list.findIndex(e1 => e1 == stop_id.id) != -1){
+                    itemm.stop_list.push(stop_id.id)
+                }
+            })
+        }
+    })
+    
+    var answer = obj_arr.map(e => e.stop_list.length);
+    return answer;
+}
+
+// 공부한 이후 풀이
+// Set과 Map을 이용한 풀이
+// ⓐ => Set을 이용해 중복된 신고내용 삭제 및 전개구문을 통해 값 가져오기 및 array.map 함수를 통해 신고 내용을 신고자, 피신고자를 구분한 배열을 생성
+// ⓑ => Map객체(키-값 쌍을 보유) 사용을 사용하여 신고내용(report) 중 피신고자에 대해 신고 내용을 정리한다.
+// counts.get(bad[1])+1||1 => counts map 객채 중 피신고자의 값을 가져와서 1을 더한 값 또는 피신고자의 값이 없다면 1을 반환
+// 위의 내용은 ||을 통해 변수 초기화하는 기법이다.
+// ⓒ => Map 객체를 사용하여 신고내용 중 피신고자의 이름으로 ⓑ에서 신고당한를 가져와 K 보다 많다면 map 객체에 삽입한다.
+// ⓓ => array.map 함수를 이용하여 이용자의 이름을 가져와 ⓒ의 객체 중 이용자의 신고 메일 수신 횟수를 담은 배열을 반환
+// 시간 복잡도 n + n + n + n => O(n)
+
+function solution(id_list, report, k) {
+    let reports = [...new Set(report)].map(a=>{return a.split(' ')}); // ⓐ
+    let counts = new Map(); // ⓑ
+    for (const bad of reports){
+        counts.set(bad[1],counts.get(bad[1])+1||1)
+    }
+    let good = new Map(); // ⓒ
+    for(const report of reports){
+        if(counts.get(report[1])>=k){
+            good.set(report[0],good.get(report[0])+1||1)
+        }
+    }
+    return id_list.map(a=>good.get(a)||0); // ⓓ
+}
+
+

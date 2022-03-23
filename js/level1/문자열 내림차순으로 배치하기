@@ -1,0 +1,17 @@
+
+// 풀이
+// 문자열을 array.split("")을 통해 배열로 변경
+// array.sort() => 배열을 정렬한다. sort는 유니코드 순으로 정렬해준다. => 알파벳의 순서는 대문자 다음 소문자이다. ascii랑 같은 순서
+// array.reverse() => 배열 뒤집기
+// array.join("") => 배열 문자열로 합치기
+function solution(s) {
+    return s.split("").sort().reverse().join("");
+}
+
+// 다른 풀이
+//sort((a,b) => a<b?1:-1) 내림차순으로 정렬하는 방식 => Infinity, NaN이 아닌경우(숫자인 경우) sort((a,b) => b-a) 사용가능(내림차순) => a-b는 오름차순
+//시간복잡도를 생각했을 경우 위의 풀이보다 월등하다.
+
+function solution(s) {
+    return s.split("").sort((a,b) => a<b?1:0).join("");
+}

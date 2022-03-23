@@ -1,0 +1,6 @@
+
+//풀이
+//string.repeat 함수를 통해 해당 string 반복 + n%2 가 1이면 '수' 추가
+function solution(n) {
+    return "수박".repeat(n/2) + (n%2==1?"수":"");
+}

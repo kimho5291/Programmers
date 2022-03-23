@@ -1,0 +1,16 @@
+
+// 풀이
+// divisor 함수 => 해당 수의 약수를 전부 찾아 약수의 합을 return
+
+const divisor = (num) =>{
+    let result = 0;
+    for(let i=1; i<=num; i++){
+        if(num%i == 0){
+            result+=i;
+        }
+    }
+    return result;
+}
+function solution(n) {
+    return divisor(n);
+}

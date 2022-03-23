@@ -1,0 +1,21 @@
+
+//풀이
+// tt => 정규식 a~z or A~Z 포함
+// tt.test => 알파벳이 하나라도 포함되어있으면 true
+const tt = /[a-zA-Z]/;
+function solution(s) {
+    return s.length==4||s.length==6?(!tt.test(s)?true:false):false;
+}
+
+//정규식 공부 후
+// /^\d{6}$|^\d{4}$/ => 2개를 확인한다. 1번: ^\d{6}$,  2번: ^\d{4}$
+// ^ => 시작
+// & => 종료
+// | => 또한
+// \d => 숫자
+// {4} => 4회 반복
+// {6} => 6회 반복
+const tt = /^\d{6}$|^\d{4}$/;
+function solution(s) {
+    return tt.test(s)?true:false;
+}

@@ -1,0 +1,6 @@
+
+// 풀이
+//array.findIndex 를 통해 김서방("Kim")의 위치를 반환한다.
+function solution(seoul) {
+    return "김서방은 "+seoul.findIndex(e => e == "Kim")+"에 있다";
+}

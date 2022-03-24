@@ -1,0 +1,25 @@
+
+// 풀이
+//sort 1 회 실행
+//sort 조건 두 문자열 의 n번째 자리의 문자를 가져와서 비교 2번째 if 까지
+// 3번째 if 부턴 문자열 자체를 비교한다.
+
+function solution(strings, n) {
+    return strings.sort((a,b) => {
+        if(a[n]>b[n])
+            return 1;
+        if(a[n]<b[n])
+            return -1;
+        if (a < b) 
+            return -1;
+        if (a > b) 
+            return 1;
+    });
+}
+
+// string.localeCompare(string) 사용한 풀이
+// string.localeCompare(string) => 해당 문자열과 매개변수로 넣은 문자열을 비교한다. 사전적 순서로 양수,0,음수 return
+// 코드는 간단하지만 시간이 오래걸린다.
+function solution(strings, n) {
+    return strings.sort((a,b) => a[n] == b[n] ? a.localeCompare(b) : a[n].localeCompare(b[n]));
+}

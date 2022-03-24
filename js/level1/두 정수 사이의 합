@@ -1,0 +1,18 @@
+
+// 풀이
+// 두 정수의 사이의 값 구하기 위한 for문
+// 두 정수의 높낮음이 뒤바뀔것을 생각해서 Math.min, max를 사용하여 for문 의 초기와, 조건에 넣어주기
+// 시간 복작도 O(n)
+function solution(a, b) {
+    let answer = 0;
+    for(var i=Math.min(a,b); i<=Math.max(a,b); i++)
+        answer+= i;
+    return answer;
+}
+
+// 등차수열을 이용한 코드
+// 공차는 1...
+// 시간 복작도 O(1) => 시간복잡도를 효율적으로 하기위해선 .. 수학공부가 필요하다...
+function solution(a, b) {
+    return (a+b)*(Math.abs(b-a)+1)/2;
+}

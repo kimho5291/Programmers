@@ -1,0 +1,14 @@
+
+//풀이
+// string.toLowerCase() => 전부 소문자로 변경
+// string.split("p") => ex) "abspddd" => ['abs', 'ddd'] 로 변경된 길이로 비교하기
+function solution(s){
+    return s.toLowerCase().split('p').length == s.toLowerCase().split('y').length;
+}
+
+// 정규식 풀이
+// s.match(/p/ig) => s 내 'p', 'P'를 찾아서 배열로 반환 => 아무것도 없으면 null을 반환 하기때문에
+// || 을통한 초기화 값을 넣어줘서 예외처리
+function solution(s){
+    return (s.match(/p/ig)||[]).length == (s.match(/y/ig)||[]).length;
+}

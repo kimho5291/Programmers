@@ -1,0 +1,35 @@
+
+//풀이
+// 전체를 돌면서 그중 큰것을 max에 몰아 놓고 sort 를 한 이후 [0]을 가져오면 큰것중 가장큰것 가져오기
+// 전체를 돌면서 그중 작을 것을 min에 map으로 array 생성 후 sort한 이후 [0]을 가져오면 작은것중 가장 큰것 가져오기
+// 시간 복잡도 O(nlogn)
+
+function solution(sizes) {
+    let max = sizes.map(e => Math.max(e[0], e[1])).sort((a,b) => b-a)[0];
+    let min = sizes.map(e => Math.min(e[0], e[1])).sort((a,b) => b-a)[0];
+    return max*min;
+}
+
+// function.apply(thisArg, [argsArray]) 사용한 풀이
+// apply는 MDN에서 정확하게 명시가 되어있지않다. -> MDN 설명 : apply() 메서드는 주어진 this 값과 배열 (또는 유사 배열 객체) 로 제공되는 arguments 로 함수를 호출합니다.
+// Math.min, max 또는 배열 붙이기 등에 사용되며, argsArray는 단일 배열만 가능하다.
+
+//3개의 풀이 중 가장 짧은 실행시간을 가진다.
+//시간복잡도 => O(N)
+
+function solution(sizes) {
+    let max = Math.max.apply(null, sizes.map(e => Math.max(e[0], e[1])));
+    let min = Math.max.apply(null, sizes.map(e => Math.min(e[0], e[1])));
+    return max*min;
+}
+
+//reduce를 이용한 풀이
+// 변수 선언시 [] 내 이름 지정 가능
+// reduce로 [0,0]을 시작해 마지막 요소까지 돌면서 요소중 큰수는 h와 비교, 요소 중 작은수는 v와 비교하여 max를 이용해서 큰수를 return
+// 의외로 시간이 좀 걸린다.
+//시간복잡도 => O(N)
+
+function solution(sizes) {
+    let [max, min] = sizes.reduce(([h,v], [ch, cv]) => [Math.max(h, Math.max(ch, cv)), Math.max(v, Math.min(ch, cv))],[0,0])
+    return max*min;
+}

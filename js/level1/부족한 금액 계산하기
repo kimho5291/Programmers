@@ -1,0 +1,19 @@
+
+// 풀이
+// 비용을 전부 계산해 가지고있는 돈과 비교하여 부족한돈이 없으면 0, 있다면 부족한 금액 return
+function solution(price, money, count) {
+    var answer = 0;
+    for(var i=0; i<=count; i++){
+        answer += (price*i);
+    }
+    return money<answer?answer-money:0;
+}
+
+//가우스.. 또 등차수열 풀이
+
+// 가져온 풀이 ..... 공식을 몰라 .. 해설은 .. X
+
+function solution(price, money, count) {
+    const tmp = price * count * (count + 1) / 2 - money;
+    return tmp > 0 ? tmp : 0;
+}

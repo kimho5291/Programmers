@@ -1,0 +1,20 @@
+
+// 풀이
+// 요소를 전부 돌면서 이전 값과 비교하여 다르면 추가하기
+//(answer.push(e), last=e) => 과호 내 ,를하면 동시에 여러 일을 할수 있다.
+// 시간 복잡도 O(N)
+function solution(arr)
+{
+    let answer = [];
+    let last = -1;
+    arr.forEach(e => last!=e?(answer.push(e), last=e):0)
+    return answer;
+}
+
+// array.filter 를 사용한 풀이
+// 위와 동일한 방법으로 다음 요소를 확인하여 다음요소와 값이 다르면 추가하기
+// 시간 복잡도 O(N)
+function solution(arr)
+{
+    return arr.filter((data, index) => data != arr[index+1]);
+}

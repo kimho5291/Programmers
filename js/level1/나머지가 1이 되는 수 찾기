@@ -1,0 +1,10 @@
+
+//풀이
+// n 만큼 반복해야하기에 for 문을 돌면서 나머지가 1이되면 return
+// 시간복잡도 O(N)
+function solution(n) {
+    for(var i=2; i<=n; i++){
+        if(n%i == 1)
+            return i;
+    }
+}

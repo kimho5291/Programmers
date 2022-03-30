@@ -1,0 +1,21 @@
+
+
+// 문자 풀이
+//숫자 -> 문자 -> 배열(각 요소 하나씩) -> 배열 뒤집기 -> 배열 내 요소 변환(문자->숫자)
+
+function solution(n) {
+    return n.toString(10).split("").reverse().map(a => a*1);
+}
+
+// 숫자 풀이
+// ⓐ => n%10 => ex) n=12345 => n%10 => 5
+// ⓑ => Math.floor(n/10) => Math.floor(소수점 버리기) => ex) n=12345 => Math.floor(n/10) => 1234
+// 문자 풀이보다 속도가 빠름
+function solution(n) {
+    let answer = new Array();
+    while(n>0){
+        answer.push(n%10); // ⓐ
+        n = Math.floor(n/10); // ⓑ
+    }
+    return answer;
+}

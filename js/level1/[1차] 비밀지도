@@ -1,0 +1,23 @@
+
+
+// 풀이
+// 비트 연산을 통해 arr1, 2 내 요소 or 연산 이후 string.toString(2) 를 통해 2진수로 변화(문자열로 변환됨)
+// 2진수로 변환된 수는 첫자리가 0이면 문자열로 나오지 않기 때문에 자리수 채우기
+// 이후 replace와 정규식(/1/g, /0/g)를 통해 문자열 변환
+
+function solution(n, arr1, arr2) {
+    for(var i=0; i<n; i++){
+        let temp = (arr1[i] | arr2[i]).toString(2);
+        if(temp.length < n) temp = " ".repeat(n-temp.length) + temp
+        arr1[i] = temp.replace(/1/g, "#").replace(/0/g, " ");
+    }
+    return arr1;
+}
+
+// map 과 padStart를 이용한풀이
+// string.padStart(자릿수, 채울 문자) => ex) "111".padStart(5, '0') => "00111"
+// replace(정규식, 변환할 값) => 변환할 값에 연산 가능
+
+function solution(n, arr1, arr2) {
+    return arr1.map((item, i) => (item|arr2[i]).toString(2).padStart(n, 0).replace(/(1|0)/g, a => a=='1'?'#':" "));
+}

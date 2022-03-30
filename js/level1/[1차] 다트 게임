@@ -42,3 +42,39 @@ function solution(dartResult) {
 }
 
 
+// 다른 사람 풀이 참조
+// 정규식을 활용한 풀이
+// ⓐ => string.match => 정규식에 맞는 패턴을 찾아 array로 반환
+//    => 정규식 => /\d.\D?/g => \d = 숫자  ||  . => \n을 제외한 문자  ||  ? => 1 or 0  || \D => 숫자가 아닌 문자
+//    => 결국 return 되는 문자의 구성은 숫자(1개)+\n을 제외한 문자(1개 또는 0개), 숫자를 제외한 문자(1개) => 총 2개 혹은 3개이다.
+
+// ⓑ => 위와 같이 match 사용
+//    => 정규식 => /(^\d{1,})(S|D|T)(\*|#)?/ => ()는 묶어서 1개로 본다는 뜻이다. => 총 3개로 나누겠다는 말
+//    => (^\d{1,}) => 시작은 숫자이며 숫자는 1개 이상이다.
+//    => (S|D|T) => 문자 S, D, T 중 1개이다.
+//    => (\*|#) => 문자 *, # 중 1개이다.
+//    => ex) "3S" => ["3", "S", undefined], "3T*" => ["3", "T", "*"]
+
+// ⓒ => ⓑ 의 결과값을 가지고 bonus와 options 를 활용해 제곱하여 반환한다.
+//    => Math.pow(곱할 값, 제곱할 정도) => ex) Math.pow(2, 3) => 2^3 => 8
+
+// ⓓ => 3번재 문자가 *이면 이전 index 값에 2를 곱해준다.
+// ⓔ => darts 배열을 재사용한다.
+// ⓕ => array.reduce를 활용하여 모든 요소를 더한 값을 반환한다.
+
+
+function solution(dartResult) {
+    let darts = dartResult.match(/\d.\D?/g); // ⓐ
+    const bonus = { 'S': 1, 'D': 2, 'T': 3 },
+          options = { '*': 2, '#': -1, undefined: 1 };
+    
+    darts.forEach((item, index) => {
+        let split = item.match(/(^\d{1,})(S|D|T)(\*|#)?/), // ⓑ
+            score = Math.pow(split[1], bonus[split[2]]) * options[split[3]]; // ⓒ
+        
+        if(split[3] == "*") darts[index-1] *= 2; // ⓓ
+        darts[index] = score; // ⓔ
+    })
+    return darts.reduce((a,b) => a+b, 0); // ⓕ
+}
+

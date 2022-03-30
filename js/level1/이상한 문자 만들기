@@ -1,0 +1,23 @@
+
+// 풀이
+// 문자열을 공백으로 split
+// map을 통해 각 요소에 다시 split
+// split된 문자를 짝수면 대문자, 홀수면 소문자로 변경 후 join으로 하나의 문자열로 합치기
+// 대/소문자가 전부 변경된 문자들을 join을 통해 다시 합친 후 return
+
+function solution(s) {
+    return s.split(" ").map(item => item.split("").map((a, i) => i%2==0?a.toUpperCase():a.toLowerCase()).join("")).join(" ");
+}
+
+
+
+// 정규식을 활용한 풀이
+// ⓐ => s.toUpperCase() 로 우선 전부 대문자로 변경한다.
+//    => replace 내 /(\w)(\w)/g 를 a => a[0] + a[1].toLowerCase()로 변경해준다. 
+//    => /(\w)(\w)/g => ()() : 2글자 => \w : 알파벳 + 숫자 + _ 중의 한 문자 => g : 문자열 전체
+//    => ex) "try helo world".match(/(\w)(\w)/g) => ["tr", "he", "lo", "wo", "rl"] 이 반환됨
+//       결국 2글자 공백이 포함되어있으면 색출되지 않는 정규식이다.
+
+function solution(s) {
+    return s.toUpperCase().replace(/(\w)(\w)/g, a => a[0] + a[1].toLowerCase()); // ⓐ
+}

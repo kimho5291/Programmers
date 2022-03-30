@@ -1,0 +1,9 @@
+
+
+//풀이
+//숫자인 n을 toString(10)을 통해 10진수로 변환
+//변환한 문자열을 split을 통해 하나씩 나눈다.
+// 나뉜 문자들에 reduce를 통해 각 요소를 다 더한 이후 return 한다.
+function solution(n){
+    return n.toString(10).split("").reduce((sum, cur) => sum+Number(cur),0);
+}

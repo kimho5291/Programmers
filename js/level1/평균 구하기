@@ -1,0 +1,7 @@
+
+//풀이
+// reduce를 통해 모든 요소 더하기 / length
+
+function solution(arr) {
+    return arr.reduce((s, c) => s+c,0)/arr.length;
+}

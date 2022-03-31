@@ -1,0 +1,13 @@
+
+
+// 풀이
+// 숫자인 n을 문자열로 변환 => toString
+// 문자열을 배열로 변환 => split
+// 배열 내림차순 정렬 => sort
+// 내림차순으로 변경된 배열을 문자열로 변경 => join
+// 문자 to 숫자 => Number
+// 문자를 숫자로 변경하는 다른 방법 Number 대신 *1 해주면 됨
+
+function solution(n) {
+    return Number(n.toString(10).split("").sort((a,b) => b-a).join(""));
+}

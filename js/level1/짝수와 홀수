@@ -1,0 +1,9 @@
+
+
+// 풀이
+// num%2 는 0 또는 1이 나온다. => 0은 false 인것을 활용한 풀이
+
+
+function solution(num) {
+    return num%2?"Odd":"Even";
+}

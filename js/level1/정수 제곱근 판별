@@ -1,0 +1,10 @@
+
+//풀이
+// 제곱근 구하기 => Math.sqrt
+// 제곱근이 정수인지 확인 => %1==0 => 다른 방법으로는 Number.isInteger 함수 사용해도됨
+// 정수면 Math.pow 를 사용하여 제곱근 + 1 을 제곱하여 return 아니면 -1 return
+
+function solution(n) {
+    var answer = Math.sqrt(n);
+    return answer%1==0?Math.pow(answer+1,2):-1;
+}

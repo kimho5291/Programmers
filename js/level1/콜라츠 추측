@@ -1,0 +1,26 @@
+
+
+// 풀이
+// num 이 1이 될때 까지 반복
+// num%2는 0 or 1  이다. => 0은 false 인것을 사용함
+// 짝수면 /2 홀수면 *3+1
+// 반복횟수가 500 이상이면 -1 return, 후위연산자를 통해 if문 이후 answer는 +1이 됨
+
+function solution(num) {
+    var answer = 0;
+    while(num != 1){
+        num = num%2?num*3+1:num/2;
+        if(answer++ >= 500) return -1;
+    }
+    return answer;
+}
+
+// 재귀 풀이
+// answer를 매개변수로 넣어줌 => answer = 0 => 배개면수 초기화 if 값이 있다면 초기화 X
+// num == 1 이면 값 return => 반복횟수가 500 이하면 횟수 return 아니면 -1 return
+//          아니면 재귀 => solution을 재귀 돌린다. (홀/짝에 맞는 값, 증가된 answer)
+
+
+function solution(num, answer=0) {
+    return num == 1?(answer<500?answer:-1):solution(num%2?num*3+1:num/2, ++answer);
+}

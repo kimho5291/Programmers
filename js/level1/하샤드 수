@@ -1,0 +1,11 @@
+
+
+//풀이
+// 숫자 to 문자 => toString
+// 문자열 to 배열 => split
+// 배열 모든 요소 더하기 => reduce
+// x와 x의 요소 더한 값이 같다면 0 다르면 1 이다. 0은 false인것을 활용 하여 return
+
+function solution(x) {
+    return x%x.toString(10).split("").reduce((s,c)=>s+Number(c),0)?false:true;
+}

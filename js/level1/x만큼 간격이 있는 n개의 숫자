@@ -1,0 +1,22 @@
+
+
+//풀이
+//1부터 n까지 돌면서 answer에 요소 추가하기
+
+function solution(x, n) {
+    var answer = [];
+    for(var i=1; i<=n; i++){
+        answer.push(x*i)
+    }
+    return answer;
+}
+
+
+// Array 풀이
+// Array(length) => length 길이의 배열 생성
+// array.fill(값) => array에 값 채우기
+// x 값이 들어간 요소에 index에 맞는 값 곱해서 return
+
+function solution(x, n) {
+    return Array(n).fill(x).map((cur, index) => (cur * ++index));
+}

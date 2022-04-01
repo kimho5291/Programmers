@@ -1,0 +1,6 @@
+
+//풀이
+// 2중 map을 사용해서 행렬 덧셈 하기
+function solution(arr1, arr2) {
+    return arr1.map((c, i) => c.map((cc,ii) => cc+arr2[i][ii]));
+}

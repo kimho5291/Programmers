@@ -1,0 +1,34 @@
+
+
+//풀이
+// 유클리드 호제법
+// 최대공약수(GCD : Greatest Common Divisor) :  두 자연수의 공통된 약수 중 가장 큰 수
+// ex) 72와 30의 최대 공약수 유클리드 알고리즘 사용하면
+// 72 % 30 = 12
+// 30 % 12 = 6
+// 12 % 6 = 0  =>> 나머지가 0이 되면 나눈 수가 최대 공약수임을 알 수 있다.
+// 유클리드 호제법의 시간복잡도는 O(logN)이다.
+
+// 최소공배수(LCM :Least Common Multiple) : 두 자연수의 공통된 배수 중 가장 작은 수
+// 두수의 합 / 최대공약수 = 최소공배수
+// 유클리드 호제법으로 나온 최대공약수를 이용
+// n*m / GCD = LCM
+
+const gcd = (a, b) => b==0?a:gcd(b, a%b);
+// lcm = a*b/gcd
+function solution(n, m) {
+    var answer = [];
+    answer.push(gcd(Math.max(n,m), Math.min(n,m)));
+    answer.push(n*m/answer[0])
+    return answer;
+}
+
+// for 문을 사용한 풀이
+// for 문에서 유클리드 호제법 실행
+// for 문 조건문에 r=n%m 을 넣어서 위의 예제처럼 r= 12%6 이런식으로 들어가면 0 이기때문에 0=false 임으로 탈출한다.
+// 신박한 for문 사용
+
+function solution(n, m, r=0) {
+    for(var nm = n*m; r=n%m; n=m, m=r){}
+    return [m, nm/m];
+}

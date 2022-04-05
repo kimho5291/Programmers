@@ -1,0 +1,35 @@
+
+
+//풀이
+// 탐욕법 => 가장 최선의 경우의 수를 실행한다.
+// ⓐ => n 길이만큼 array 생성 후 0 값 넣기
+// ⓑ => 여분의 체육복을 가진 사람의 번호에 여분의 체육복 가진 수를 추가해준다. (+1)
+// ⓒ => 분실한 체육복을 가진 사람의 번호에 체육복수를 줄여준다. (-1)
+// ⓓ => 모든 요소를 돌면서 체육복이 없는 사람이 있다면 앞번호부터 여분의 체육복 있는지 확인한다.
+//    => 있다면 여분의 체육복을 빌려준다.(여분의 체육복 -1, 부족한 사람 +1)
+//    => 없다면 뒷번호도 확인한다.
+// ⓔ => 여분의 체육복을 빌려준 뒤 체육복이 있는 사람의 길이 반환
+
+function solution(n, lost, reserve) {
+    let array = new Array();
+    for(let i=0; i<n; i++){ // ⓐ
+        array.push(0)
+    }
+    
+    reserve.forEach(item => array[item-1]++); // ⓑ
+    lost.forEach(item => array[item-1]--);  // ⓒ
+    
+    array.forEach((item, index) => { // ⓓ
+        if(item == -1){
+            if(array[index-1] == 1){
+                array[index-1] = 0;
+                array[index] = 0;
+            }else if(array[index+1] == 1){
+                array[index+1] = 0;
+                array[index] = 0;
+            }
+        }
+    });
+    
+    return array.filter(item => item >= 0).length; // ⓔ
+}

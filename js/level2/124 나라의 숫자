@@ -1,0 +1,13 @@
+
+
+// 풀이
+// 실패한 풀이 ㅠ
+function solution(n) {
+    var answer = '';
+    while(n>2){
+        answer = n%3==1?"1":n%3==2?"2":"4" + answer;
+        n = n<=3?0:Math.floor(n/3);
+    }
+    answer = (n<=0?"":n) + answer;
+    return answer;
+}

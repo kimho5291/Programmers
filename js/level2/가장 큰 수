@@ -38,3 +38,33 @@ function solution(numbers) {
     }).join("");
    
 }
+
+// 위의 코드가 실패한 이유
+// 문자열을 하나씩 확인하면서 해당 자리수의 숫자만을 비교
+// 전체문자열을 합쳤을때는 생각을 안함
+// 그냥 테스트 케이스만 풀수있는 정도
+
+
+
+
+// 성공한 풀이 
+// sort를 이용하여 풀이
+// ex) 3과 30 비교할 시 => "330"과 "303"을 비교하듯 문자열을 합쳐서 비교함
+function solution(numbers) {
+    
+    let answer = numbers.sort((a,b)=>{
+        
+        let ab = String(a)+String(b);
+        let ba = String(b)+String(a);
+        
+        if(ab > ba) return -1;
+        if(ab < ba) return 1;
+        else return 0;
+        
+    }).join("");
+    
+    return answer*1 == 0?'0':answer;
+}
+
+// 마지막 return 문에서 *1을 활용하여 "00000" 을 "0"으로 바꿔주는 예외처리이다.
+// 11번 테스트 케이스가 저 예외처리가 필요하다.

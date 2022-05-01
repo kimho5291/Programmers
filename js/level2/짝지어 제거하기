@@ -1,0 +1,19 @@
+// 정확성은 전부 다 정답 이지만 효율성에서 전부 timeout 인 코드 ..
+// 0501 실패한풀이
+function solution(s)
+{
+    let arr = s.split("");
+
+    for(let i=0; i<arr.length-1; ){
+        if(arr[i] == arr[i+1]){
+            arr.splice(i,2);
+            i=0;
+        }else{
+            i++;
+        }
+    }
+    
+    return arr.length == 0 ? 1 : 0;
+}
+
+// :(

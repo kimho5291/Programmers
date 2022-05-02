@@ -1,5 +1,6 @@
 // 정확성은 전부 다 정답 이지만 효율성에서 전부 timeout 인 코드 ..
 // 0501 실패한풀이
+// 최장 걸리는 시간 : 9800ms 정도
 function solution(s)
 {
     let arr = s.split("");
@@ -17,3 +18,21 @@ function solution(s)
 }
 
 // :(
+
+// 배열로 작성된 것을 문자열로 변경하여 진행
+// 배열보다 시간이 월등히 빠르다 .. 
+// 최장 걸리는 시간 : 250ms
+function solution(s)
+{
+    
+    for(let i=0; i<s.length-1; ){
+        if(s[i] == s[i+1]){
+            s = s.slice(0, i) + s.slice(i+2, s.length);
+            i != 0 ? i-- : 0;
+        }else{
+            i++;
+        }
+    }
+    
+    return s.length == 0 ? 1 : 0;
+}

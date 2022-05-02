@@ -36,3 +36,29 @@ function solution(s)
     
     return s.length == 0 ? 1 : 0;
 }
+
+// 성공한 풀이
+// stack을 사용한 풀이
+// 이건 스택을 못써서가 아니라 .. 풀이 방식을 몰랐다 .. ㅠㅠㅜ
+// 시간을 빨리하려면 자료구조를 사용하는 방법이 빠르다.
+// 코드는 너무쉬운데 .. ㅠㅠ stack을 왜 생각을 못했을까
+
+//코드의 설명
+// 1. stack이 비어있으면 push 및 len 증가
+// 2. stack의 top과 해당 자리 글자를 비교하여 같으면 pop 다르면 push를 한다.
+
+function solution(s){
+    let stack = [], len = -1;
+    for(let i=0; i<s.length; i++){
+        if(len<0){
+            stack.push(s[i]); len++;
+        }else{
+            if(s[i] == stack[len]){
+                stack.pop(); len--;
+            }else{
+                stack.push(s[i]); len++;
+            }
+        }
+    }
+    return stack.length == 0 ? 1 : 0;
+}

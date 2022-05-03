@@ -1,0 +1,41 @@
+// 해결 방안
+// 큐처럼 사용하여 해결
+// 다른 사람을 보면 빼낸 후 arr.some 을 사용하여 자신보다 큰게있는지 확인 후 처리하는 방식
+// 나는 max, min을 확인하여 처리하는 방법을 사용
+// 시간복잡도 : O(N^2)
+
+var loc = 0;
+const push = (arr, a) => {
+    arr.push(a);
+    if(loc == -1) loc = arr.length - 1;
+}
+const pop = (arr) => {
+    --loc;
+    return arr.shift(); // arr.shift() == arr.splice(0,1)[0]
+};
+
+function solution(priorities, location) {
+    loc = location;
+    let result = 0;
+
+    while(loc != -1){
+        let max = Math.max(...priorities);
+        let min = Math.min(...priorities);
+        
+        if(min != max){
+            for(let i=0; priorities[i] != max;){
+                push(priorities, pop(priorities));
+            }
+            pop(priorities);
+            result++;
+        }else{
+            for(;loc != -1;){
+                pop(priorities);
+                result++;
+            }
+        }
+        
+    }
+    
+    return result;
+}

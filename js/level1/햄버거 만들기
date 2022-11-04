@@ -1,6 +1,8 @@
 햄버거 만들기
 java로하려고 했으나 java 잘 기억안나서 js로 .. 헿
 
+
+//## 성공한 풀이
 function solution(data) {
     var answer = 0;
     let arr=[];

@@ -1,0 +1,34 @@
+햄버거 만들기
+java로하려고 했으나 java 잘 기억안나서 js로 .. 헿
+
+function solution(data) {
+    var answer = 0;
+    let arr=[];
+    for(let i=0; i<data.length; i++){
+        if(data[i] == "1" && arr.length >= 3){
+            let len = arr.length-1;
+            let aa = ""+arr[len-2]+arr[len-1]+arr[len];
+            if(aa == "123"){
+                answer++;
+                arr.splice(arr.length-3, 3);
+                continue;
+            }
+        }
+        arr.push(data[i]);
+    }
+    return answer;
+}
+
+풀이
+배열을 스택처럼 사용
+1. data[i] == 1 than 이전 3개를 가져와서 문자열로 치환
+2. 문자열이 "123"이면 answer++ 및 마지막 3개 제거 후 continue
+3. 아니면 배열에 추가
+
+ps. 
+문자열 치환이나 123을 죄다 확인하기 싫어서 수학적 접근을 하고자함
+예를들어,, arr[len-2] = 1, arr[len-1] = 2, arr[len] = 3 이라고 하면
+arr[len-2] + arr[len] == 4 와 
+arr[len-1] + arr[len] == 5를 확인하면 1,2,3를 전부 알수있다고 생각함,,,
+if문을 1개 줄일수 있을것 같아서 해봤지만 테스트 케이스 3~12가 죽어도 안됨
+멍청한 나로선 이유를 찾을 수 없어서 패스

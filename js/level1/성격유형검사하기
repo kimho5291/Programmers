@@ -1,0 +1,119 @@
+성격 유형 검사
+
+
+// [1] 배열 풀이
+
+const types = [
+    ["R", "T"], 
+    ["C", "F"], 
+    ["J", "M"], 
+    ["A", "N"]
+];
+
+const typeInit = () => {
+    return [[0,0], [0,0], [0,0], [0,0]];
+}
+const surveyChoice = (myType, servey, choices) => {
+    
+    let score, type;
+    if(choices < 4) {
+        type = servey[0];
+        score = 4 - choices;
+    }
+    else if(choices > 4) {
+        type = servey[1];
+        score = choices - 4;
+    }
+    
+    for(let i=0; i<types.length; i++){
+        for(let j=0; j<2; j++){
+            if(types[i][j] == type){
+                myType[i][j] += score;
+            }
+        }
+    }
+    
+}
+const typeResult = (myType) => {
+    let answer = "";
+    for(let i=0; i<myType.length; i++){
+        if(myType[i][0] < myType[i][1]){
+            answer += types[i][1];
+        }else{
+            answer += types[i][0];
+        }
+    }
+    return answer;
+}
+
+function solution(survey, choices) {
+    // 배열 풀이
+    let myType = typeInit();
+    for(let i=0; i<choices.length; i++){
+        surveyChoice(myType, survey[i], choices[i]);
+    }
+    return typeResult(myType);
+}
+
+풀이
+1. init 함수를 통해 0으로 초기화된 4x2 배열 가져오기
+2. survey의 길이만큼 for문 돌리기
+3. survey와 choice를 비교해서 4보다 크고 작고를 비교해서 유형과 스코어 추출
+4. 추출한 유형과 미리 선언해놓은 types와 비교 후 위치를 찾아 myType에 스코어 추가
+5. 전부 확인한 이후 myType과 types를 비교해서 전체 유형 추출
+
+// [2] 오브젝트 풀이
+
+const types = [
+    ["R", "T"], 
+    ["C", "F"], 
+    ["J", "M"], 
+    ["A", "N"]
+];
+
+const typeObjInit = () => {
+    let obj = {};
+    for(let i=0; i<types.length; i++){
+        obj[types[i][0]] = 0;
+        obj[types[i][1]] = 0;
+    }
+    return obj;
+}
+
+function solution(survey, choices) {
+
+    // 오브젝트 풀이
+    let myType= typeObjInit();
+    for(let i=0; i<choices.length; i++){
+        if(choices[i] < 4) {
+            myType[survey[i][0]] += 4 - choices[i];
+        }
+        else if(choices[i] > 4) {
+            myType[survey[i][1]] += choices[i] - 4;
+        }
+    }
+    console.log(myType);
+    let answer = "";
+    for(let i=0; i<types.length; i++){
+        if(myType[types[i][0]] >= myType[types[i][1]]){
+            answer+=types[i][0];
+        }else{
+            answer+=types[i][1];
+        }
+    }
+    
+    return answer;
+}
+
+풀이
+1. 오프젝트 형은 자동 초기화가 안되기 때문에 모든 유형에 관련해 key:value 를 초기화해준다.
+2. survey를 전부 돌면서 추출한 유형에 스코어 추가
+3. 미리 선언한 types와 비교하여 전체 유형 추출
+
+ps. 
+1. js는 오프젝트형은 초기화 하지않으면 NaN라서 비교, 연산 불가
+2. 선언과 동시에 값 연산하기
+ ex) obj[key] = (obj[key]|0)+1)
+     obj[key]가 없으면 0으로 초기화 하고 1추가 하기
+3. 선언과 동시에 하는 방법을 오브젝트 형식 풀이에 적용하였으나
+   초기화가 되지않는 유형들이 있어서 그냥 처음에 전부 초기화하는 형식으로 변경

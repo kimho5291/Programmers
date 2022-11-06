@@ -1,0 +1,38 @@
+숫자짝꿍
+
+function solution(X, Y) {
+    
+    let answer = "", keys = "";
+    let xObj = {}, yObj = {};
+    
+    for(let i=0; i<X.length; i++){
+        xObj[X[i]] = xObj[X[i]]?xObj[X[i]]+1:1;
+    }
+    // console.log(xObj);
+    
+    for(let i=0; i<Y.length; i++){
+        yObj[Y[i]] = yObj[Y[i]]?yObj[Y[i]]+1:1;
+    }
+    // console.log(yObj)
+    
+    for(key in xObj){
+        if(yObj[key]){
+            let min = yObj[key] <= xObj[key]? yObj[key]:xObj[key];
+            answer = key.repeat(min) + answer;
+            keys += key;
+        }
+    }
+    
+    
+    
+    return answer==""?"-1":keys=="0"?"0":answer;
+}
+
+풀이
+1. 각 X,Y가 가진값을 object 형식(키:값)으로 변환
+2. XObj를 키값별로 돌면서 YObj에 값은 키값이 있는지 비교
+3. 있다면 둘중 작은수를 구하기
+4. 구한 작은수만큼 answer에 키값 누가해주기
+
+오브젝트 형식으로 돌리면 키 비교가 간단하다는 것을 알아내고 0부터 9까지 돌면서 키값추가
+0부터 오름차순으로 가기때문에 값을 추가해줄때 큰값을 앞에 추가해주면 따른 정렬없이 결과값 추출 가능

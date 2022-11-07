@@ -1,0 +1,26 @@
+콜라문제
+
+function solution(a, b, n, count = 0) {
+    if(n<a) return count;
+    let temp = Math.floor(n / a);
+    count += temp * b;
+    n = (temp * b) + (n % a);
+    return solution(a, b, n, count);
+}
+
+풀이
+재귀방식으로 통한 풀이 방식
+1. 총 가진 콜라병 수(n)가 가져다줄 콜라병 수(a) 보다 작으면 총 변경 가능한 콜라병 수 return
+2. 가진 콜라병/변경해주는수 의 정수부만 추출 (제출한 횟수 = temp)
+3. 총 변경한 수(count) = 빈 콜라병 제출 횟수(temp) * 돌려받는 콜라 수(b)
+4. 내가 현재 가진 콜라 빈병의 수는 돌려받은 콜라 수 + 변경 못한 나머지 빈콜라병 수
+5. 재귀 실행 ~
+
+ps.
+다른 사람들 풀이를 보니깐 재귀 또는 반복문으로 풀이함
+외적으로는 수학공식을 사용한 풀이방식이 존재함
+
+공식
+solution = (a, b, n) => Math.floor(Math.max(n - b, 0) / (a - b)) * b
+
+사실 어떤 공식인지는 모르겟으나 신기해서 가져와봄 !

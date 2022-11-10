@@ -1,0 +1,54 @@
+[LV1] 옹알이(2)
+
+// 코드
+const word = {
+    a: {len: 3, word:"aya"},
+    y: {len: 2, word:"ye"},
+    w: {len: 3, word:"woo"},
+    m: {len: 2, word:"ma"}
+}
+function solution(babbling) {
+    var answer = 0;
+    for(let i=0; i<babbling.length; i++){
+        let key = "";
+        
+        for(let j=0; j<babbling[i].length; ){
+            let temp = word[babbling[i][j]];
+            
+            if(temp && key != babbling[i][j]){
+                
+                if(temp.word == babbling[i].substr(j, temp.len)){
+                    key = babbling[i][j];
+                    j += temp.len;
+                }else{
+                    key = "";
+                    break;
+                }
+            }else{
+                key = "";
+                break;
+            }
+        }
+        
+        if(word[key]){
+            answer++;
+        }
+        
+    }
+    return answer;
+}
+
+// 풀이
+오프젝트를 활용한 풀이
+1. babbling 길이 만큼 반복
+2. key값을 확인해서 중복 여부와 j번째 문자가 word 오프젝트의 key값으로 존재하는지 확인
+ -- 반복과 정답 여부를 판단하기 위한 key
+3. 오프젝트의 word와 j + word의 길이만큼 때어내어 비교
+4. 문자가 같으면 key값 변경 및 j 값 증가
+5. for문 종료 후 key값이 유효한지 확인 후 answer 증가
+
+ps.
+정규식을 활용한 replace를 하려고 했으나, 다돌리면 너무 비효율적이라 판단
+js의 문자열 함수인 substr과 substring 혼동으로 인해 풀이 고생...
+(둘자 인자가 2개지만 인자의 의미가 다름)
+

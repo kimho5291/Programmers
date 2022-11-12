@@ -1,0 +1,18 @@
+[LV1] 과일장수
+
+// 코드
+
+function solution(k, m, score) {
+    var answer = 0;
+    score.sort((a,b) => b-a);
+    for(let i=m-1;i<score.length; i+=m){
+        answer += (score[i]*m);
+    }
+    return answer;
+}
+
+// 풀이
+1. score 내림차순 정렬
+2. 상자의 최저 사과 점수는 초항이 m-1이고 공차가 m인 것을 활용하여 구함
+   -- for(let i=m-1;i<score.length; i+=m) 
+3. 각 상자의 최저 점수 사과와 사과 갯수를 다 더하면 끝 ~

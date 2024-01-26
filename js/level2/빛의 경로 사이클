@@ -1,0 +1,51 @@
+// 문제를 이해하지 못해서 넘기기
+
+const directionObj = {
+  up: 2,
+  down: 3,
+  left: 0,
+  up: 1,
+};
+
+const sdx = [-1, 1, 0, 0];
+const sdy = [0, 0, 1, -1];
+const ldx = [0, 0, 1, -1];
+const ldy = [1, -1, 0, 0];
+const rdx = [0, 0, -1, 1];
+const rdy = [-1, 1, 0, 0];
+
+function solution(grid) {
+  var answer = [];
+  let obj = grid.map((e, i) =>
+    e.split("").map((ee, ii) => {
+      return {
+        node: ee,
+        index: [i, ii],
+        direction: [0, 0, 0, 0],
+      };
+    })
+  );
+
+  console.log(obj);
+
+  return answer;
+}
+
+function move(node, index, direction, length) {
+  if (node == "S") {
+    index[0] += sdx[directionObj[direction]];
+    index[1] += sdy[directionObj[direction]];
+  } else if (node == "L") {
+    index[0] += ldx[directionObj[direction]];
+    index[1] += ldy[directionObj[direction]];
+  } else if (node == "R") {
+    index[0] += rdx[directionObj[direction]];
+    index[1] += rdy[directionObj[direction]];
+  }
+
+  if (index[0] < 0) index[0] = length - 1;
+  if (index[1] < 0) index[1] = length - 1;
+
+  if (index[0] >= length) index[0] = 0;
+  if (index[1] >= length) index[1] = 0;
+}

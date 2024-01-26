@@ -1,0 +1,53 @@
+// 풀이중
+
+// 현재 모든 경우의 수를 도출하였으면
+// 도출된 case를 활용하여 우선순위로 사용
+// 모든 경유의 수 돌면서 계산값이 max인 것이 answer
+
+function solution(expression) {
+  var answer = 0;
+
+  // let num = expression.split(/[-+*]/gi);
+  // let oper = expression.replace(/[0-9]/g, "").split("");
+
+  let num = [],
+    oper = [],
+    set = new Set();
+
+  let temp = "";
+  for (let i = 0; i < expression.length; i++) {
+    if (expression[i] >= "0" && expression[i] <= "9") {
+      temp = temp + expression[i];
+    } else {
+      num.push(parseInt(temp));
+      oper.push(expression[i]);
+      set.add(expression[i]);
+      temp = "";
+    }
+  }
+  num.push(parseInt(temp));
+
+  console.log(num);
+  console.log(oper);
+
+  let cases = [];
+  createCase(cases, "", [...set]);
+
+  console.log(cases);
+
+  return answer;
+}
+
+function createCase(cases, string, arr) {
+  if (arr.length == 0) {
+    cases.push(string);
+    return;
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    let temp = string + arr[i];
+    let tempArr = [...arr];
+    tempArr.splice(i, 1);
+    createCase(cases, temp, tempArr);
+  }
+}

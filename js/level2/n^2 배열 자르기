@@ -1,0 +1,54 @@
+// [LV 2] n^2 배열 자르기
+
+/*
+Number 변수를 사용해서 해당 라인의 기준 숫자를 선언
+2차원 배열을 사용하였다. (저장 x) -> 저장하면서 지간 오래 걸림
+시간을 줄이기 위해 start로 배열 시작점을 찾음 (left/n의 소수점 버리면 해당 줄 나옴)
+빠른 종료를 위해서 right 넘기면 return
+*/
+
+function solution(n, left, right) {
+  var answer = [];
+
+  let start = Math.floor(left / n);
+  let index = start * n;
+
+  for (let i = start; i < n; i++) {
+    let number = i + 1;
+
+    for (let j = 0; j < n; j++) {
+      let temp = 0;
+
+      if (i >= j) temp = number;
+      else temp = number + (j - i);
+
+      if (index >= left && index <= right) {
+        answer.push(temp);
+      } else if (index > right) {
+        return answer;
+      }
+
+      index++;
+    }
+  }
+
+  return answer;
+}
+
+// 다른 사람 풀이
+/*
+너무 간단해서 충격적
+left에서 right 까지 반복
+i % n = 해당 라인의 기본값
+parseInt(i / n) 우측으로 갈수록 증가하는 수 
+*/
+
+function solution(n, left, right) {
+  var answer = [];
+
+  for (let i = left; i <= right; i++) {
+    answer.push(Math.max(i % n, parseInt(i / n)) + 1);
+  }
+
+  return answer;
+}

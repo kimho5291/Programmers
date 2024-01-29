@@ -1,0 +1,115 @@
+// 해결
+
+/*
+1번 풀이
+방향을 구한 후 방향에 맞는 풀이 진행
+
+어째서 인지 풀이 안됨...
+
+5개 빼고 다 fail ..
+일단 분석하지 않았지만 방향을 구하는 부분에서 error 가 있을 것을 예상
+
+*/
+
+
+function solution(m, n, startX, startY, balls) {
+
+    // case1 : ptopDist(3, 7, 7, 13)
+    // case2 : ptopDist(3, 7, 2, 13)
+    // case3 : ptopDist(3, 7, 13, 3)
+    
+    var answer = balls.map(e => {
+        let endX = e[0], endY = e[1];
+        
+        let dir = bounceDirection(m, n, startX, startY, endX, endY);
+        if(dir == 0) endY = n + (n-endY); // up
+        if(dir == 1) endY = endY*-1; // down
+        if(dir == 2) endX = endX*-1; // left
+        if(dir == 3) endX = m + (m-endX); // right
+        
+        return ptopDist(startX, startY, endX, endY);
+    });
+    
+    return answer;
+}
+
+function ptopDist(x1, y1, x2, y2){
+    return Math.pow(Math.abs(x1-x2), 2) + Math.pow(Math.abs(y1-y2), 2);
+}
+
+function bounceDirection(wallX, wallY, startX, startY, endX, endY){
+
+    let up = wallY * 2 - endY  - startY;
+    let down = startY + endY;
+    let left = startX + endX;
+    let right = wallX * 2 - endX - startX;
+
+    let arr = [up, down, left, right]; // 상하좌우가 다 될때
+    
+    if(startY == endY) { // Y 축이 겹칠때 (가로)
+        if(startX < endX) arr = [up, down, left, Infinity]; 
+        else arr = [up, down, Infinity, right]; 
+    }
+    else if(startX == endX){ // X 축이 겹칠때 (세로)
+        if(startY > endY) arr = [up, Infinity, left, right]; 
+        else arr = [Infinity, down, left, right]; 
+    }
+    
+    let min = Math.min.apply(null, arr);
+    
+    // console.log(arr.findIndex(e => e == min));
+    
+    return arr.findIndex(e => e == min);
+}
+
+
+
+////////////////
+
+/*
+2번 풀이
+안되는 방향만 구하고 그외 전부 구해서 그중 제일 짧은 길이를 선택하는 방식
+
+해당 풀이로 해결
+
+다른 사람들 풀이를 보았을 때 방향을 구하지안하고 이풀이로 해결 ...
+
+*/
+
+function solution(m, n, startX, startY, balls) {
+    var answer = balls.map(e => {
+        let endX = e[0], endY = e[1];
+        
+        let arr = [0, 0, 0, 0]; // 상하좌우가 다 될때
+        
+        if(startY == endY) { // Y 축이 겹칠때 (가로)
+            if(startX < endX) arr = [0, 0, 0, Infinity];  // 공이 오른쪽
+            else arr = [0, 0, Infinity, 0]; // 공이 왼쪽
+        }
+        else if(startX == endX){ // X 축이 겹칠때 (세로)
+            if(startY > endY) arr = [0, Infinity, 0, 0]; // 공이 아래
+            else arr = [Infinity, 0, 0, 0];  // 공이 위
+        } 
+        
+        console.log(arr);
+        
+        arr = arr.map((e, i) => {
+            if(i == 0 && e == 0)      return ptopDist(startX, startY, endX, n * 2 - endY);
+            else if(i == 1 && e == 0) return ptopDist(startX, startY, endX, -endY);
+            else if(i == 2 && e == 0) return ptopDist(startX, startY, -endX, endY);
+            else if(i == 3 && e == 0) return ptopDist(startX, startY, m * 2 - endX, endY);
+            else return Infinity;
+        });
+        
+        console.log(arr);
+          
+        return Math.min.apply(null, arr);
+    });
+    
+    
+    return answer;
+}
+
+function ptopDist(x1, y1, x2, y2){
+    return Math.pow(Math.abs(x1-x2), 2) + Math.pow(Math.abs(y1-y2), 2);
+}

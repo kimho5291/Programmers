@@ -1,0 +1,85 @@
+// 해결 BFS
+
+/*
+
+전체 풀이 과정
+
+완전 탐색을 통해 풀려고 재귀를 돌렸는데 런타임 error??  때문에 완료가 되지 않는다.
+시간 초과가 아니라 런타임 error라니 ...
+
+dfs = 재귀
+
+그리구 array 가 아닌 set을 써서 배교할 애들을 줄였다.
+
+질문에서 힌트 발견 x->y 로 상향식이 아닌
+y->x 로 하향식으로 진행 경우의 수가 줄어듬 => 바로 줄어들었음 => 93.8점
+
+11번 시간 초과 => 질문에서 보니깐 BFS로 풀면 해결된다고함
+
+bfs = while, queue
+queue에는 필요한 정보만 담는다.
+
+
+*/
+
+// array에 넣으면서 하는 방식 => run time error
+// 질문에서 본 결과 재귀 스택 제한때문에 그렇다고 함
+function solution(x, y, n) {
+    let arr = new Set();
+    calc(arr, 0, x, y, n);
+    if(arr.size == 0) return -1
+    return Math.min.apply(null, [...arr]);
+}
+
+function calc(arr, count, x, y, n){
+    if(x == y) {
+        arr.add(count);
+        return;
+    }
+    if(Math.min.apply(null, [...arr]) < count) return;
+    if(x > y) return;
+    
+    calc(arr, count+1, x*3, y, n);
+    calc(arr, count+1, x*2, y, n);
+    calc(arr, count+1, x+n, y, n);
+    
+}
+
+
+// y->x 로 하향식으로 코드 변경, DFS -> run time error 없어짐
+function solution(x, y, n) {
+    let arr = new Set();
+    calc(arr, 0, x, y, n);
+    if(arr.size == 0) return -1
+    return Math.min.apply(null, [...arr]);
+}
+
+function calc(arr, count, x, y, n){
+    if(x > y) return;
+    if(y % 1 > 0) return;
+    if(x == y) {
+        arr.add(count);
+        return;
+    }
+    if(Math.min.apply(null, [...arr]) < count) return;
+    
+    calc(arr, count+1, x, y/3, n);
+    calc(arr, count+1, x, y/2, n);
+    calc(arr, count+1, x, y-n, n);
+    
+}
+
+// y->X 하향식 , BFS
+function solution(x, y, n) {
+    const queue = [[y, 0]]; 
+    while(queue.length != 0){
+        let [value, result] = queue.shift();
+        if(x == value) return result;
+        if(x > value) continue;
+        
+        if((value/3)%1 == 0) queue.push([value/3, result+1]);
+        if((value/2)%1 == 0) queue.push([value/2, result+1]);
+        queue.push([value-n, result+1]);
+    }
+    return -1;
+}

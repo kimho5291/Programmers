@@ -1,0 +1,141 @@
+/*
+object 생성으로 간단히 비교하려고 book time을 변경함 (end 시간에 10분 추가)
+list가 없으면 추가 else
+시간을 비교해서 end 시간이 다음 book time 이후면 list 변경
+조건에 충족한 방이 없으면 방 추가
+*/
+
+/*
+    room = {
+        start: {
+            hour: 11,
+            min: 20
+        },
+        end: {
+            hour: 12
+            min: 30
+        },
+        finish: {
+            hour: 12
+            min: 40
+        }
+    }
+*/
+
+function solution(book_time) {
+    
+    let bookList = createList(book_time);
+    
+    bookList.sort((a,b) => {
+        if(a.start.hour < b.start.hour){
+            return -1;
+        }else if(a.start.hour == b.start.hour){
+            if(a.start.min <= b.start.min) return -1;
+            if(a.start.min > b.start.min) return 1;
+        }else{
+            return 1;
+        }
+    });
+    
+    var answer = [];
+    for(let i=0; i<bookList.length; i++){
+        if(answer.length == 0) {
+            answer.push(bookList[i]);
+            continue;
+        }
+        
+        let flag = false;
+        for(let j=0; j<answer.length; j++){
+            if(answer[j].end.hour < bookList[i].start.hour || 
+               (answer[j].end.hour == bookList[i].start.hour &&
+               answer[j].end.min <= bookList[i].start.min)){
+                answer[j] = bookList[i];
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            answer.push(bookList[i]);
+        }
+        
+    }
+    
+    return answer.length;
+}
+
+function createList(book_time){
+    return book_time.map(function(e){
+        let endHour = parseInt(e[1].substring(0, 2));
+        let endMin = parseInt(e[1].substring(3, 5))+10;
+        if(endMin >= 60){
+            endHour++;
+            endMin = endMin%60;
+        }
+        
+        return {
+            start: {
+                hour: parseInt(e[0].substring(0, 2)),
+                min: parseInt(e[0].substring(3, 5))
+            },
+            end: {
+                hour: endHour,
+                min: endMin
+            }
+        }
+    });
+}
+
+
+// 다른 사람 풀이
+/*
+우선 시간을 분단위로 변경 => 시간 비교할때 수훨하다
+
+시간 상 큰 차이는 없다.
+bigO 에서 차이 없음
+*/
+
+function solution(book_time) {
+    
+    let bookList = createList(book_time);
+    var answer = [];
+    for(let i=0; i<bookList.length; i++){
+        
+        if(answer.length == 0) {
+            answer.push(bookList[i]);
+            continue;
+        }
+        
+        let flag = false;
+        for(let j=0; j<answer.length; j++){
+            if(answer[j].end <= bookList[i].start){
+                answer[j] = bookList[i];
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            answer.push(bookList[i]);
+        }
+        
+    }
+    
+    return answer.length;
+}
+
+function createList(book_time){
+    let list = book_time.map(function(e){
+        let start = e[0].split(":");
+        let end = e[1].split(":");
+        return {
+            start: parseInt(start[0]) * 60 + parseInt(start[1]),
+            end: parseInt(end[0]) * 60 + parseInt(end[1]) + 10
+        }
+    });
+    
+    list.sort((a,b) => {
+        if(a.start <= b.start)  return -1;
+        else  return 1;
+    });
+    
+    return list;
+}

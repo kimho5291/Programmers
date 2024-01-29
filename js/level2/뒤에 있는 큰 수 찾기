@@ -1,0 +1,52 @@
+//
+
+/*
+간단한 풀이로 해결하려 했으나 마지막 4개의 케이스에서 시간초과 됨
+bigO에서 죽는듯
+*/
+
+function solution(numbers) {
+    var answer = [];
+    
+    for(let i=0; i<numbers.length; i++){
+        let max = numbers[i];
+        
+        for(let j=i+1; j<numbers.length; j++){
+            if(max < numbers[j]) {
+                max = numbers[j];
+                break;
+            }
+        }
+        
+        if(max == numbers[i]) answer.push(-1);
+        else answer.push(max);
+    }
+    
+    return answer;
+}
+
+
+
+/// 풀이
+/*
+스택을 사용해야하며 뒤부터 진행해야한다.
+
+앞으로 진행하면 항상 맨뒤 까지 해줘야하며
+stack을 사용함으로써 조건에 충족한 value만 저장하여
+비교를 최소한으로 할 수 있다.
+*/
+
+
+function solution(numbers) {
+    var answer = [], stack = [];
+    
+    for(let i=numbers.length-1; 0 <= i; i--){
+        while(stack.length != 0 && stack.at(-1) <= numbers[i]) stack.pop();
+        if(stack.length == 0) answer.push(-1);
+        else answer.push(stack.at(-1));
+        
+        stack.push(numbers[i]);
+    }
+    
+    return answer.reverse();
+}

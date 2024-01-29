@@ -1,0 +1,55 @@
+// 해결
+
+function solution(elements) {
+    var answer = new Set();
+    //answer = new Set([...answer, ...[3,5,4]]);
+    
+
+    for(let i=1; i<=elements.length; i++){ // 돌리는 갯수
+        
+        if(i == elements.length) {
+            let value = elements.reduce((s,c) => s+c, 0);
+            // console.log(value);
+            answer.add(value);
+            break;
+        }
+        
+        for(let j=0; j<elements.length; j++){ // 현재 포인트
+            let temp = 0;
+            for(let k=0; k<i; k++){ // 현재 포인트에서 돌리는 갯수 만큼 더해주기
+                let index = (j+k) % elements.length;
+                // console.log("index : " + index);
+                temp += elements[index];
+            }
+            // console.log(temp);
+            answer.add(temp);
+        }
+    }
+    
+    return answer.size;
+}
+
+// 다른 사람 풀이
+/*
+concat 함수를 통해서 array를 순화하듯 두개를 이어붙혀준 이후
+각 index에서 1~5개의 합이 필요하기 때문에 2중 for문으로 해결함
+
+ex: 7 9 1 1 4 7 9 1 1 4
+
+단순한 2중 for문으로 해결해서 
+시간이 엄청나게 차이난다.
+
+*/
+
+function solution(elements) {
+    const circular = elements.concat(elements);
+    const set = new Set();
+    for (let i = 0; i < elements.length; i++) {
+        let sum = 0;
+        for (let j = 0; j < elements.length; j++) {
+            sum += circular[i + j];
+            set.add(sum);
+        }
+    }
+    return set.size;
+}

@@ -1,0 +1,65 @@
+// 해결 greedy
+
+/*
+그리디
+
+문제
+최대 2명에 limit 까지 태울 수 있는 보트를 가지고 
+people 배열에 있는 사람을 전부 옮기는 데 최솟값을 구하라
+
+people 길이 : 1~50000
+사람 무게   : 40~240
+limit 제한  : 40~240
+
+테케 추가
+1. [100, 40, 70, 50, 60, 40, 40, 40], 100, 5
+2. [40, 60, 60, 60, 60, 40, 50, 60, 90], 90, 8
+3. [50, 60, 60, 70, 50, 70, 60, 60, 60, 60, 70, 50], 120, 6
+
+// 최초 풀이
+people 내림차순 정렬
+shift를 하면서 첫번째 값 꺼내기
+people의 제일 가벼운 사람가 무게를 더한 값이 limit 이하면 pop, answer++;
+limit를 초과하면 answer++;
+반복은 people.length > 1 까지
+
+정확성은 통과하였으나, 효율성에서 실패함
+실패는 시간초과라고 생각해야하할 듯 싶다.. 
+최악의 경우를 생각해서 시간 복잡도를 생각해야할 듯 싶다.
+
+실패의 경우 - 아이디어
+1. 내림차순
+2. sort 함수 자체
+3. 마지막 값을 계속 꺼내온다. -> people[people.length]
+
+정도 ?
+해결방법
+1. 오름차순으로 바꿔본다.
+- 내림차순 해결과 동시에 3번 문제도 해결 => 해당 방법으로 해결함
+
+*/
+
+// 최초풀이 -> 85.2점 -> 효율성 테스트 실패 -> 효율성 최대시간 112ms
+// 정확성 통과 ,, 효율성 테스트 5중 1개 맞음
+function solution(people, limit) {
+    var answer = 0;
+    people.sort((a,b) => b-a);
+    while(people.length > 0){
+        let weight = people.shift();
+        if(people[people.length-1] + weight <= limit) people.pop();
+        answer++;
+    }
+    return answer;
+}
+
+// 해결방법 1 => 전부 통과 => 효율성 최대시간 70ms
+function solution(people, limit) {
+    var answer = 0;
+    people.sort((a,b) => a-b);
+    while(people.length > 0){
+        let weight = people.pop();
+        if(people[0] + weight <= limit) people.shift();
+        answer++;
+    }
+    return answer;
+}

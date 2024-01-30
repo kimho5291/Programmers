@@ -1,0 +1,30 @@
+// 해결 O
+
+/*
+OBJECT를 활용해서 풀이
+
+귤을 크기별로 obj 저장
+정렬하기 위해서 obj -> arr 변경
+내림차순 정렬 후 k를 빼가면서 arr 진행
+if k <= 0 이면 return i+1
+
+*/
+
+function solution(k, tangerine) {
+    let obj = {};
+    for(let i=0; i<tangerine.length; i++){
+        obj[tangerine[i]] == undefined ? obj[tangerine[i]] = 1 : obj[tangerine[i]]++;
+    }
+    
+    let arr = [];
+    for(let key in obj){
+        arr.push([key, obj[key]]);
+    }
+    arr.sort((a,b) => b[1]-a[1]);
+
+    for(let i=0; i<arr.length; i++){
+        k -= arr[i][1];
+        if(k <= 0) return i+1;
+    }
+    return 0;
+}

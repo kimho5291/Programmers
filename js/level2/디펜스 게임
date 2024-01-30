@@ -1,0 +1,86 @@
+// 해결 x
+
+/*
+스택으로 풀려고함
+우선 k 만큼 배열 생성 후 데이터 넣어주기
+오름차순 정렬
+
+0번째 보다 크면 빼주고 n을 뺀수만큼 차감
+arr 마지막에 큰수 넣기 <--- 생각해보니깐 추가되는 값이 제일 큰수라고 생각할 수 없음
+반복 후
+
+넣기
+
+변경 1
+변경할 아이디어 -> 스택이 아니게 됨 -> 만약 c 면 linked-list 면 빠를 듯
+1. 제일 작은 수 찾기 
+2. 찾은 수보다 현재 적수가 적으면 그냥 n 차감
+3. 크면 제일 작은 수 를 n에 차감 후 해당 index에 현재 적수 추가
+
+반례 : 5,2,[99,1,99] -> 정답 3
+반례 : 7,1,[2,1,5,1] -> 4
+반례 : 7,2 [2,1,99,99] -> 4
+
+변경 2
+반례를 통해서 while의 첫번째 if 문이 잘못된것을 확인 -> n <= 0 탈출 -> 알고보니 필요없음
+n을 빼기전에 n보다 크면 탈출
+또한 k가 enemy length 보다 크면 enemy length 가 답으로 예외처리
+
+
+변경3
+시간초과 + 런타임에러(아마 메모리?)를 해결하기 위해서 
+Heap + 우선순위 큐를 사용하던가 이진탐색, 파라메트릭스 서치를 사용하라는데 
+이기회에 min heap을 간단히 구현하여 풀도록 하겠다.
+
+
+
+
+*/
+
+// 변경1 
+// 78.1 ,, 런타임 + 시간 초과 + 실패 ,, 제일 오래걸린시간 8833ms
+function solution(n, k, enemy) {
+    const arr = Array.from({length:k}, (e, i) => enemy[i]);
+    
+    while(k < enemy.length){
+        if(n < enemy[k]) break;
+        
+        let min = Math.min.apply(null, arr);
+        if(min < enemy[k]){
+            let index = arr.findIndex(e => e == min);
+            n = n - arr[index];
+            arr[index] = enemy[k];
+        }else{
+            n = n - enemy[k];
+        }
+        ++k;
+    }
+
+    return k;
+}
+
+// 변경2
+// 90.6 ,, 시간초과 + 런타임 에러 ,, 최대시간 8388ms
+function solution(n, k, enemy) {
+    if(k>=enemy.length) return enemy.length;
+    
+    const arr = Array.from({length:k}, (e, i) => enemy[i]);
+
+    while(k < enemy.length){
+        
+        let min = Math.min.apply(null, arr);
+        if(min < enemy[k]){
+            if(n < min) break;
+            let index = arr.findIndex(e => e == min);
+            n = n - arr[index];
+            arr[index] = enemy[k];
+        }else{
+            if(n < enemy[k]) break;
+            n = n - enemy[k];
+        }
+
+        ++k;
+    }
+
+    return k;
+}

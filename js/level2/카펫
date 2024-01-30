@@ -5,6 +5,19 @@
 그 분기를 최대한 줄이고자 temp로 격자로 우선 짜르고 들어가려고 했으나 안됨
 전부하기에는 시간 초과 남
 
+그냥 방정식풀이방법 사용
+// 방정식
+yellow = (x-2)(y-2) = xy-2y-2x+4
+brown = x*y-yellow = xy-(xy-2y-2x+4) = 2y+2x-4
+x = brown/2-y+2
+yellow = (brown/2-y+2-2)(y-2) = (brown/2-y)(y-2)
+-yellow = -1*(brown/2-y)(y-2) = (y-brown/2)(y-2) = y^2-y*-brown/2-2y+brown = y^2-y(2+brown/2)+brown
+0 = y^2-y(2+brown/2)+brown+yellow
+
+사람들은 근의공식 쓴다는데 그건 어렵다.. 1점짜리 문제 .. 다음엔 풀도록 하자 ..
+
+bigO = O(N);
+
 
 */
 
@@ -41,4 +54,15 @@ function solution(brown, yellow) {
     }
     
     return -1;
+}
+
+///////////// 방정식 풀이
+function solution(brown, yellow) {
+    let y=3;
+    while(y<=2000000){
+        let zero = Math.pow(y,2) - (2+brown/2) * y + brown + yellow;
+        if(zero === 0) break;
+        y++;
+    }
+    return [brown/2-y+2, y];
 }

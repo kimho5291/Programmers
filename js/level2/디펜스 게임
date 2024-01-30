@@ -33,6 +33,10 @@ Heap + 우선순위 큐를 사용하던가 이진탐색, 파라메트릭스 서�
 이기회에 min heap을 간단히 구현하여 풀도록 하겠다.
 
 
+*** 추가 -> 파라메트릭스 서치로 풀 수 있는 해답을 봐서 한번 따라해본다.
+파라메트릭스 -> 이분탐색을 통해서 문제의 최솟값, 최댓값을 서치하는 개념
+파마메트릭스 인 이유 -> 되는 것중에 최댓값을 찾으면 되기때문...
+
 
 
 */
@@ -83,4 +87,113 @@ function solution(n, k, enemy) {
     }
 
     return k;
+}
+
+// 변경 3
+// 최대 걸린시간 86ms -> 시간이 엄청나게 차이남 ... 호호
+// 정렬 말고 우선순위를 구해야하는 것이 있다면 충분히 사용할만함
+// 구현하는데도 별로 시간 안듦
+
+class MinHeap{
+    constructor(length){
+        this.array = Array.from({length:length}, () => -1);
+        this.length = 0;
+    }
+    push(value){
+        let i= ++this.length;
+        while(i != 1 && value < this.array[parseInt(i/2)]){
+            this.array[i] = this.array[parseInt(i/2)]
+            i=parseInt(i/2);
+        }
+        this.array[i] = value;
+    }
+    pop(){
+        let result = this.array[1];
+        let value = this.array[this.length--];
+        let parent = 1, child = 2;
+        while(child <= this.length){
+            if(child < this.length && this.array[child] > this.array[child+1]) child++;
+            if(value < this.array[child]) break;
+            this.array[parent] = this.array[child];
+            parent = child;
+            child = parent*2;
+        }
+        this.array[parent] = value;
+        return result;
+    }
+    get(index){
+        return this.array[index+1];
+    }
+    printHeap(){
+        console.log("----------- Max Heap ----------");
+        let temp = "";
+        for(let i=1; i<=this.length; i++){
+            temp = temp + " "+ this.array[i];
+        }
+        console.log(temp);
+        console.log("----------- Max Heap ----------");
+    }
+}
+
+function solution(n, k, enemy) {
+    if(k>=enemy.length) return enemy.length;
+    
+    const minHeap = new MinHeap(k+1);
+    let index = 0;
+    
+    while(index < k) minHeap.push(enemy[index++]);
+    
+    while(index < enemy.length){
+        // console.log(index, enemy[index]);
+        // minHeap.printHeap();
+        
+        let min = minHeap.get(0);
+        if(min < enemy[index]){
+            if(n < min) break;
+            n = n - minHeap.pop();
+            minHeap.push(enemy[index]);
+        }else{
+            if(n < enemy[index]) break;
+            n = n - enemy[index];
+        }
+        
+        ++index;
+    }
+
+    return index;
+}
+
+// *** 추가
+// 파라메트릭스 -> 이분 탐색으로 값 찾기 -> 최는것중 최댓값 찾기
+// 코드는 간결하지만 최대시간 7879ms
+// 반으로 쪼개면서 쪼갠 값의 왼쪽이 되는지 안되는지 판단
+// 되면 left를 mid+1 처리 -> mid 까지 된거니깐 mid+1
+// 안되면 right를 mid-1 처리 -> mid 까지 해서 안된거니깐 mid-1
+// 그렇게 반복하다가 최종적으로 while을 벗어나게 될 때는
+// left가 right를 넘길 경우 되는것 중 최댓값을 찾았다는 이야기 이다.
+// 그래서 return right하면됨 -> left는 마지막 mid+1로 인해서 넘어감
+
+function solution(n, k, enemy) {
+    let left= 0, right = enemy.length;
+    
+    while(left <= right){
+        let mid = parseInt((right+left)/2);
+        if(paramatrix(n, k, enemy, mid)) left = mid+1;
+        else right = mid-1;
+    }
+    
+    return right;
+}
+
+function paramatrix(n, k, enemy, mid){
+    if (mid <= k) return true;
+    
+    let arr = enemy.slice(0,mid).sort((a,b) => b-a); // 내림차순
+    // console.log(arr)
+    let sum = 0;
+    for(let i=k; i<arr.length; i++){
+        sum += arr[i];
+        if(sum > n) return false;
+    }
+    return true;
 }

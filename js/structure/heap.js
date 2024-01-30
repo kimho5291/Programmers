@@ -35,8 +35,7 @@ class MaxHeap{
     }
     pop(){
         let result = this.array[1];
-        let value = this.array[this.length];
-        this.array[this.length--] = -1;
+        let value = this.array[this.length--];
         let parent = 1, child = 2;
         // while 조건이 child인 이유는 자식이 없을수도 있기 때문이다.
         while(child <= this.length){
@@ -53,8 +52,17 @@ class MaxHeap{
 
         return result;
     }
+    get(index){
+        return this.array[index+1];
+    }
     printHeap(){
-        console.log(this.array);
+        console.log("----------- Max Heap ----------");
+        let temp = "";
+        for(let i=1; i<=this.length; i++){
+            temp = temp + " "+ this.array[i];
+        }
+        console.log(temp);
+        console.log("----------- Max Heap ----------");
     }
 }
 
@@ -73,8 +81,7 @@ class MinHeap{
     }
     pop(){
         let result = this.array[1];
-        let value = this.array[this.length];
-        this.array[this.length--] = -1;
+        let value = this.array[this.length--];
         let parent = 1, child = 2;
         // while 조건이 child인 이유는 자식이 없을수도 있기 때문이다.
         while(child <= this.length){
@@ -91,8 +98,17 @@ class MinHeap{
 
         return result;
     }
+    get(index){
+        return this.array[index+1];
+    }
     printHeap(){
-        console.log(this.array);
+        console.log("----------- Min Heap ----------");
+        let temp = "";
+        for(let i=1; i<=this.length; i++){
+            temp = temp + " "+ this.array[i];
+        }
+        console.log(temp);
+        console.log("----------- Min Heap ----------");
     }
 }
 

@@ -1,0 +1,155 @@
+// 해결 O
+
+/*
+
+// 초기 풀이
+파라메트릭스를 사용한 max, min를 찾는다.
+max를 찾지못하면 return 0
+min 까지 구하면 return max-min+1
+
+뭐가 문제인지 ... 
+아 알았다.. 애들이 정렬이 되어있지 않아서 파라메트릭스를 사용할 수 없다.
+
+// 변경 1
+for 문으로 변경해서 최초 맞으면 min 채우기
+맞지 않으면 max 채우기
+시간 복잡도 : O(n^2) => for문안에 array.slice 2번있어서 ^2 인지 ^3 인지 하여튼 많다 ...
+
+
+// 변경 2
+시간 복잡도 : O(N) 예상
+object를 활용해서 푸는 방안으로 해결해보기
+object는 2개 left, right
+for문으로 topping을 순회 하면서 left에 값 넣어주면서 동시에 right의 값 줄여주기
+둘의 key가 같으면 answer++
+끝까지 어떻게 될지 모르니 전부 순회 후 
+return answer
+
+풀리긴 하는데 전분 순회하니깐 안되네 ;; => 시간 초과 남
+맞다가 안맞으면 break 하도록 하는게 맞는것 같다.
+
+--> 질문에서 결과를 보니깐 문제는 변경 2번으로 풀이한 내용이 많다
+    내 코드에서 문제는 if(Object.keys(right).length == Object.keys(left).length) answer++; 이부분이다.
+    이미 topping의 길이가 100만 인데 그 안에서 object.keys.length를 하면 시간 복잡도가 O(n*m) 으로 
+    알고리즘에서 대충 1억번 이상이면 시간초과로 생각하면 되고 
+    100만에서 100만 곱해도 1억이 된다.. 이를 생각하면 key가 몇개일줄알고 그걸 알에서 순회하면서 셈하고 있냐고..
+    다음에는 보기를 봐서 시간복잡도도 생각하자..
+
+// 변경 3
+시간 복잡도 : O(N)
+변경 2번과 동일하게 가되 key를 셈하는게 아니고 변수로 left[left, right]를 셈하면서 들어간다.
+right object를 {value, first}로 변경
+값을 순회하면서 같은 값이면 value 차감 및 value==0이면 right--
+또한, 한번이라도 나오면 first++하면서 left 상승
+
+
+*/
+//// 초기 풀이 -> 60점 -> 실패 -> 최대시간 1448ms
+function solution(topping) {
+    var answer = -1;
+    
+    let min=0, max=0, mid;
+    let left = 0, right=topping.length;
+    
+    // max
+    while(left <= right){
+        mid = parseInt((left+right)/2);
+        if(paramatrix(topping, mid)) left = mid+1;
+        else right = mid-1;
+    }
+    // console.log(left, right);
+    max = right
+    if(max == -1) return 0;
+    
+    left = 0; right=topping.length;
+    
+    while(left <= right){
+        mid = parseInt((left+right)/2);
+        if(paramatrix(topping, mid)) right = mid-1;
+        else left = mid+1;
+    }
+    // console.log(left, right);
+    min = left;
+    
+    return max-min+1;
+}
+
+function paramatrix(topping, mid){
+    let a = new Set(topping.slice(0, mid));
+    let b = new Set(topping.slice(mid, topping.length));
+    if(a.size == b.size) return true;
+    return false;
+}
+
+
+// 변경 1 -> 10점 -> 2개 제외 시간초과 -> 최소 시간 1417
+function solution(topping) {
+    let min=0, max=0;
+    for(let i=1;i<topping.length-1; i++){
+        let a = new Set(topping.slice(0, i));
+        let b = new Set(topping.slice(i, topping.length));
+        
+        if(a.size == b.size && min == 0) min = i;
+        if(a.size != b.size && min != 0) max = i;
+        
+        if(min != 0 && max != 0) break;
+        
+    }
+    
+    if(min == 0 || max == 0) return 0;
+    return max - min;
+}
+
+
+// 변경 2  -> 30점 -> 시간 초과 -> 최대시간 2623ms
+function solution(topping) {
+    let answer = 0, left={}, right={}, flag = true;
+    for(let i=0;i<topping.length; i++){
+        right[topping[i]] == undefined ? right[topping[i]] = 1 : right[topping[i]]++;
+    }
+    
+    for(let i=0;i<topping.length && flag; i++){
+        right[topping[i]]-1 == 0 ? delete right[topping[i]] : right[topping[i]]--;
+        left[topping[i]] == undefined ? left[topping[i]] = 1 : left[topping[i]]++;
+        
+        // console.log("i : " + i + "  value : "+ topping[i]);
+        // console.log(left, right);
+        
+        if(Object.keys(right).length == Object.keys(left).length) answer++;
+        else {
+            if(answer != 0 && flag) flag != flag;
+        }
+    }
+    
+    return answer;
+}
+
+
+// 변경 3 => 통과 => 최대시간 62ms
+// 시간복잡도를 생각하게 된 계기 ...
+function solution(topping) {
+    let answer = 0, right={}, count=[0,0];
+    for(let i=0;i<topping.length; i++){
+        right[topping[i]] == undefined ? 
+            right[topping[i]] = {value: 1, first: 0} : 
+            right[topping[i]].value++;
+    }
+
+    count[1] = Object.keys(right).length;
+
+    for(let i=0;i<topping.length; i++){
+        right[topping[i]].value--;
+        if(right[topping[i]].value == 0) count[1]--;
+        if(right[topping[i]].first == 0) {
+            count[0]++;
+            right[topping[i]].first++;
+        }
+        if(count[0] == count[1]) answer++;
+        
+        // console.log(i, topping[i]);
+        // console.log(right);
+        // console.log(count);
+    }
+    
+    return answer;
+}

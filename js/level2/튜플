@@ -1,0 +1,92 @@
+// 해결 0
+
+/*
+문제
+'{', '}', ',' 3개로 튜플을 표현한다.
+튜플은 숫자가 복잡하게 있어도 크기가 작은 것부터 들어온것으로 인식하며
+들어온 순서대로 튜플을 담아야한다.
+ex: "{{4,2,3},{3},{2,3,4,1},{2,3}}" => 튜플 : 3 2 4 1
+    크기가 작은 1 ~ 4 까지 순차적으로 봐야 해결 가능
+
+
+조건
+1. 매개변수 1개 : s
+2. s 크기 : 5~백만 => O(N) 이하로 문제를 해결해야한다는 뜻
+3. 튜플이 들어온게 중복될 수 도 있다고 함 => 갯수 판단도 해야한다는 뜻
+
+풀이
+문자열 처리이기 때문에 어떻게 할 꺼냐가 중요하다.
+1. 문자열을 순회하면서 s를 1~s.length-1 (맨앞, 뒤 제외) 하고 순회하면서 
+   '{'를 시작으로 '}'를 만날때까지 만나는 숫자는 index에 저장
+        그 중간에 있는 수는 n자리수 까지 해결할 수 있게 , 혹은 }를 만나면 처리
+    obj를 튜플마다 만들어서 key의 갯수로 정렬 후 
+    큰거 - 작은 key 중 겹치지 않는 것이 이제 튜플이 들어온 순서 이다.
+
+//초기 풀이
+1. 문자열 파싱으로 통해 각 튜플 object 생성
+2. key length를 통해 오름차순 정렬
+3. arr 순환
+
+
+다 되긴 하는데 사람들은 형식을 json으로 변경해서 진행함
+let newArr = JSON.parse(s.replace(/{/g,'[').replace(/}/g,']'));
+바로 배열로 인식 ... 나는 뭘한거지 .. 뭐 이런 형식이 이쓰면 json으로 이제 변경해서 하는걸로
+
+또한, 배열이기 때문에 reduce를 통해서 이전 값에 포함되어 있지않은 수를 찾는다.
+
+
+*/
+
+// 초기 풀이 => 통과 => O(N^2)
+function solution(s) {
+    var answer = [];
+    let flag = false, value="", tempArr={};
+    let arr = [];
+    for(let i=1; i<s.length-1; i++){
+        if(flag == true) {
+            if(s[i] >= '0' && s[i] <= '9') value = value + s[i];
+            else{
+                !(tempArr[value]|0) ? tempArr[value]=1 : tempArr[value]++;
+                value = "";
+                if( s[i] == '}'){
+                    arr.push(tempArr);
+                    tempArr = {};
+                    flag = false;
+                    i++; // 튜플을 이어주는 , 뛰어넘기
+                }
+            }
+        }
+        if(flag == false && s[i] == '{') flag = true;
+    }
+    
+    arr.sort((a,b) => Object.keys(a).length - Object.keys(b).length);
+    // console.log(arr)
+    
+    for(let i=0; i<arr.length; i++){ // 1~500
+        let key = Object.keys(arr[i])[0];
+        answer.push(Number(key));
+        
+        for(let j=i+1; j<arr.length; j++){
+            --arr[j][key] == 0 ? delete arr[j][key] : 0;
+        }
+        // console.log(i);
+        // console.log(arr);
+    }
+    
+    return answer;
+}
+
+
+// 다른 사람 풀이를 참조한 풀이
+/*
+1. json 형식으로 변환
+2. length를 통해 오름차순 정렬
+3. reduce 함수를 통해 이전 가지고 있는 값과 현재 내가 가지고있는 값 중 겹치지 않은 것을 추가
+4. return
+*/
+function solution(s) {
+    return JSON.parse(s.replace(/{/g,'[').replace(/}/g,']'))
+    .sort((a,b) => a.length-b.length)
+    .reduce((acc, cur) => [...acc, ...cur.filter(e => !acc.includes(e))],[]);
+    console.log(newArr);
+}

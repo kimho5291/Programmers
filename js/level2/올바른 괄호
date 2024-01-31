@@ -1,0 +1,33 @@
+// 해결 0
+
+/*
+문제
+괄호 ( ) 가 존재하는데 순서가 올바른 괄호로 채워져있는지 확인하라
+
+조건
+매개변수 : s 괄호들이 있는 문자열
+1. s length 1~100000
+2. 문자는 '(' ')' 두개 뿐이다.
+
+풀이
+value를 하나 두고 
+단순 for문으로 돌고 (면 ++ ) 면 -- 한다
+for문 내 value <0 이면 return false
+끝났을때도 value !=0 false;
+끝에 value == 0 true
+
+예외처리 : 홀수면 false;
+
+
+
+*/
+// 초기 풀이 => 100점 => 통과(정확성, 효율성) => O(N)
+function solution(s){
+    let value = 0;
+    if(s.length % 2 == 1) return false;
+    for(let i=0; i<s.length; i++){
+        s[i] == '(' ? ++value : --value;
+        if(value < 0) return false;
+    }
+    return value != 0 ? false : true;
+}

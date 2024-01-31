@@ -1,5 +1,47 @@
-// 해결
+// 해결 0
 
 /*
+문제
+주어진 스킬찍은 리스트 중 선행스킬 조건을 지킨 수를 구하시오
+
+
+조건
+주어진 매개변수 2개 : skill(선행스킬), skill_trees(스킬찍은 리스트)
+1. 전부 대문자
+2. 선행스킬은 붙어있음 ex: DBC
+3. skill_trees 1~20
+4. skill_trees 각 원소 길이 2~26
+5. 첫번째 걸 못배우면 두번쨀껄 못배움
+
+풀이
+1. 선행스킬에 있는 문자를 전부 지우고 판단 -> replaceall을 각 원소당 선행스킬 길이만큰 갈겨야하기때문에 어렵
+2. 2중 for 문으로 
+
 
 */
+//최초풀이 => 통과
+function solution(skill, skill_trees) {
+    let skillArr = skill.split("");
+    // console.log(skillArr)
+    
+    let trees = skill_trees.map(e => {
+        return e.split("").reduce((acc, cur) => {
+            if(skillArr.includes(cur)) return [...acc, cur];
+            return [...acc];
+        }, []);
+    })
+    // console.log(trees)
+
+    let answer = 0;
+    for(let i=0; i<trees.length; i++){
+        let check = true;
+        for(let j=0; j<trees[i].length; j++){
+            if(trees[i][j] != skillArr[j]) {
+                check = false;
+                break;
+            }
+        }
+        if(check) answer++;
+    }
+    return answer;
+}

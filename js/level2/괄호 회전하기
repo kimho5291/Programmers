@@ -1,0 +1,50 @@
+//해결 0
+
+/*
+문제
+(), {}, [] 3가지는 모두 올바른 괄호 문자열이다.
+A가 올바르면 그를 감사싸는 괄호도 올바른 괄호이다.
+또한 A가 올바르면 옆에 있는 괄호도 올바른 괄호가 와야한다.
+즉, 감싸고있던 안감싸고있던 전부 올바른 괄호여야한다.
+
+조건
+1. 매개변수 1개 : s
+2. s의 길이 1~1000
+
+풀이
+홀수면 짝이 안맞아서 안된다. => 이것만 추가했는데 제출시 2개 통과함
+
+판별은 스택으로 하면 될것으로 생각될것으로 예상 array.push, pop 사용
+- 이것을 for문 안에 넣으면 시간 복잡도가 O(N^2)이 되어서 힘든데 ... -> 일단 해보자
+    = N^2이 되어도 s의 최대 길이가 1000이기 때문에 제곱이 되어도 백만이다. 해보자
+
+*/
+
+// 초기풀이 => 통과 => O(N^2)
+function solution(s) {
+    if(s.length % 2 == 1) return 0;
+    var answer = 0;
+    let arr = s.split("");
+    for(let i=0; i<arr.length; i++){
+        // console.log(arr, check(arr));
+        if(check(arr)) answer++;
+        
+        arr.push(arr.shift());
+    }
+    return answer;
+}
+
+function check(arr){
+    let stack = [];
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] == '(' || arr[i] == '{' || arr[i] == '['){
+            stack.push(arr[i]);
+        }else{
+            if(stack[stack.length-1] == '(' && arr[i] == ')') stack.pop();
+            else if(stack[stack.length-1] == '{' && arr[i] == '}') stack.pop();
+            else if(stack[stack.length-1] == '[' && arr[i] == ']') stack.pop();
+            else false;
+        }
+    }
+    return stack.length == 0 ? true : false;
+}

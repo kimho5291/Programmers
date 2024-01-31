@@ -1,0 +1,86 @@
+// 해결
+
+/*
+문제
+주어진 값보다 n의 다음 큰 숫자를 찾아라
+
+조건
+매개변수 1 : n 현재 값
+1. n의 다음 큰 숫자는 n보다 큰 자연수
+2. n의 다음 큰 숫자와 n은 2진수로 변환했을 때 1의 갯수가 같다
+3. n의 다음 큰 숫자는 조건 1, 2,를 만족하는 수 중 가장 작은 수
+4. 자연수가 백만이기 때문 N^2 주의하자
+
+풀이
+1. 2진수 변경
+2. 전부 1이면 문자열에 0을 맨 마지막에 추가
+3. 문자열의 1의 숫자와 0의 갯수로 만들수있는 수 전부 전개 -> BFS 노드 전부 가면서 set에 결과값 넣기
+4. set -> array 변화 -> 오름차순 -> return array[0]
+
+초기풀이
+위의 풀이와 같으며 효율성없는 줄알고 말했더니 ㅋㅋㅋㅋ 65점 나왔네
+
+변경 아이디어
+1. parseInt를 줄여보려고 set말고 min을 넣고 비교해보았으나 그게 더 느렸다.
+2. 상단에 있는 binary 줄여보기 => 속도가 확실히 빨라졌다. -> 변경 -> O(N)
+
+
+질문하기를 보았을 때 현타가 왔다..
+먼저 n을 2진수로 바꿔서 1의 갯수를 확인한다.
+1~백만 중 n보다큰수니깐 
+for n~q백만 으로 순회
+순회하면서 2진수로 바꿨을 때 1의 갯수가 같으면 정답 .....
+
+무슨 BFS DFS 이런거 필요 없었다 그냥 하면 for문 ...
+
+변경 1에 적용하였다.. 
+
+
+*/
+
+// 초기 풀이 => 65점 => 정확성 실패 1, 효율성 전멸
+function solution(n) {
+    let binary = n.toString(2)
+        .split("")
+        .map(e => Number(e))
+        .reduce((acc, cur) => {
+            if(cur == 0) return [acc[0]+1, acc[1]];
+            return [acc[0], acc[1]+1];
+        }, [0, 0]);
+    
+    if(binary[0] == 0) binary[0]++;
+    
+    
+    // console.log(binary);
+    let set = new Set();
+    let queue = [ ["1", [binary[0], binary[1]-1]] ];
+    while(queue.length != 0){
+        const [string, [zero, one]] = queue.shift();
+          
+        if(zero == 0 && one == 0){
+            // console.log(string, zero, one, parseInt(string, 2));
+            let value = parseInt(string, 2);
+            if(n < value ) set.add(parseInt(string, 2));
+            continue;
+        }
+        
+        if(zero > 0) queue.push([string+"0", [zero-1, one]]);
+        if(one > 0) queue.push([string+"1", [zero, one-1]]);
+    }
+    
+    let arr = [...set].sort((a,b) => a-b);
+    // console.log(arr)
+    
+    return arr[0];
+}
+
+
+// 변경 1 => 전부 통과 => O(N)
+// 간단 ...
+function solution(n) {
+    var one = n.toString(2).replace(/0/g,"").length;
+    for(let i=n+1; i<=1000000; i++){
+        if(i.toString(2).replace(/0/g,"").length == one) return i;
+    }
+    return -1;
+}

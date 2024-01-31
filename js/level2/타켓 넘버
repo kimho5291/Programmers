@@ -1,0 +1,41 @@
+// 해결
+
+/*
+문제
+주어진 n개가 담긴 number 배열의 순서를 바꾸지 않고
+연산자 + - 2개를 활용해서 target을 만들 수 있는 경우의 수를 구하시오
+
+조건
+매개변수 2개 : n개의 정수가 담긴 number, 정답 target
+1. number length 2~20
+2. 각 number 1~50
+3. target 1~1000
+
+풀이
+DFS, BFS
+결국 전부 돌아야 하는 것이기 때문에 그냥 
+DFS 깊이 우선 탐색, 재귀
+
+재귀 꿀팁
+1. 최상단에 종료 기점 작성
+2. return 하고자하면 += 이후 return
+3. 배열로 할꺼면 매개변수로 가져가기
+
+*/
+
+function solution(numbers, target) {
+    return dfs(0, 0, numbers, target);
+}
+
+function dfs(value, index, numbers, target){
+    if(index == numbers.length) {
+        if(value == target) return 1;
+        else return 0;
+    }
+    
+    let re = 0, curValue = numbers[index];
+    re += dfs(value + numbers[index], index+1, numbers, target);
+    re += dfs(value - numbers[index], index+1, numbers, target);
+    
+    return re;
+}

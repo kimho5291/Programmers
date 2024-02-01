@@ -1,0 +1,85 @@
+// 풀이중
+
+/*
+문제
+이벤트 당첨자 중 불량 사용자를 확인하여 만들 수 있는 ban list 수를 구하시오
+
+조건
+매개변수 : user_id 응모자 id array, banned_id 불량 사용자 array
+1. user_id.length는 1~8
+2. user_id 원소 길이 1~8 문자열 => 소문자, 숫자
+3. banned_id.length 1~user_id.length
+4. banned_id 원소 길이 1~8 문자열 => 소문자, 숫자, '*'(가린 문자 뭐가와도 ok 라는 뜻)
+5. 불량 사용자 아이디는 제제 리스트에 중복되어 들어갈 수 없다.
+6. 순서가 다르더라도 banned list에 있으면 하나로 처리한다.
+
+
+풀이
+우선 obj로 banned id 별로 적용되는게 뭐가 있는지 확인해서 obj에 넣어둔다.
+obj에 있는 목록을 기준으로 리스트를 만들 수 있는 경우의 수를 모두 확인한다.
+경우의 수를 확인할 때 똑같은 bannedid가 존재할 수 도있으니깐 그건 user id에 서 하니씩 빼오는 식으로 하면 
+한리스트에 똑같은 userid가 들어가는 사례를 피할 수 있을 것으로 예상한다.
+=> 아이디어 변경,, obj 필요없음 그냥 array로 해도 index가 같기 때문에 알 수 있음
+=> 중복을 피하기위해 user_id를 빼지말고 만들고 있는 list에 자기가 있는지 확인 및 set을 통해서 없앨 수 있음
+
+마지막으로 리스트를 전부 얻으면 dfs로 banned id length랑 같아 질때 
+set에 추가
+마지막으로 set.size를 return 하면 끝~
+set은 배열 내 요소까지 판단해주지 않기때문에 
+정렬이후 그냥 문자열 자체로 넣으면 구분할 수 있음 join 활용
+
+그리고 dfs에서 순서를 알 수있는 용도로 index 추가
+
+각 banned_id에 해당하는 userid를 찾으려고 3중 for문을 돌렸으나 
+userid, banned_id 둘다 최대 length가 8이고 원소의 길이가 최대 8이하여서 시간적문제는 없을것같다.
+
+
+추가 테케
+
+*/
+
+// 최초풀이 => 통과 => O(N^3) => 3중 for문 사용
+function solution(user_id, banned_id) {
+    let bannedList =  search(user_id, banned_id);
+    let set = new Set();
+    dfs([], set, bannedList, 0);
+    return set.size;
+}
+
+function dfs(arr, set, bannedList, index){
+    if(bannedList.length == index) {
+        arr.sort();
+        set.add(arr.join(""));
+        return;
+    }
+    
+    for(let i=0; i<bannedList[index].length; i++){
+        let value = bannedList[index][i];
+        if(arr.indexOf(value) == -1){
+            let newArr = [...arr, value];
+            dfs(newArr, set, [...bannedList], index+1);
+        }
+    }
+    
+}
+
+function search(user_id, banned_id){
+    let result = [];
+    for(let i=0; i<banned_id.length; i++){
+        let arr=[], banLen = banned_id[i].length;
+        for(let j=0; j<user_id.length; j++){
+            let flag = true, userLen = user_id[j].length;
+            if(banLen != userLen) continue;
+            for(let k=0; k<banned_id[i].length; k++){
+                if(banned_id[i][k] == '*') continue;
+                if(banned_id[i][k] != user_id[j][k]){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag) arr.push(user_id[j]);
+        }
+        result.push(arr);
+    }
+    return result;
+}

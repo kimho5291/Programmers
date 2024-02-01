@@ -1,43 +1,38 @@
 // 풀이중
 
-// 현재 모든 경우의 수를 도출하였으면
-// 도출된 case를 활용하여 우선순위로 사용
-// 모든 경유의 수 돌면서 계산값이 max인 것이 answer
+/*
+문제
+주어진 수식의 우선순위를 변경하여 최대값을 구하시오
 
-function solution(expression) {
-  var answer = 0;
 
-  // let num = expression.split(/[-+*]/gi);
-  // let oper = expression.replace(/[0-9]/g, "").split("");
+조건
+매개변수 : expression 주어신 수식
+1. 연산자는 *, -, + 3개 존재한다.
+2. 연산사의 우선순위는 겹칠 수 없다.
+3. expression의 길이 3~100
+4. 잘못된 연산자는 입력으로 들어오지 않는다.
+5. 피연산자(operand)는 0~999
+6. expression에 연산자는 1개 이상이다.
+7. 같은 연산자는 앞에 있는게 우선순위가 더 높다. => 앞부터 계산해라 ~
+8. 결과 값은 절대값으로 처리
 
-  let num = [],
-    oper = [],
-    set = new Set();
+풀이
+우선 수식에 있는 연산자를 가져온다. => 정규식 사용 => set에 넣고 종류가 뭐가있는지 확인
+set으로 만들어진 연산자 array를 통해 모든 경우의 수 찾기 => 책을 보니깐 모든 경우의 수를 찾는 것도 
+중요 하지만 제한된 경우에는 손으로 하는게 더 빠르다.
+나올수 있는 모든 경우의 수 : [ '-*+', '-+*', '*-+', '*+-', '+-*', '+*-' ]
 
-  let temp = "";
-  for (let i = 0; i < expression.length; i++) {
-    if (expression[i] >= "0" && expression[i] <= "9") {
-      temp = temp + expression[i];
-    } else {
-      num.push(parseInt(temp));
-      oper.push(expression[i]);
-      set.add(expression[i]);
-      temp = "";
-    }
-  }
-  num.push(parseInt(temp));
+도출된 경우의 수를 가지고 계산을 진행하면 된다. 물론 모든 경우의 수를 가지고
+계산은 후윞표기법을 사용한 스택 계산을 통해서 진행하면 된다.
 
-  console.log(num);
-  console.log(oper);
+후위표기법 변경 tio
+우선순위가 나보다 높으면 push 나보다 낮거나 같으면 pop 이후 그녀석 push
 
-  let cases = [];
-  createCase(cases, "", [...set]);
+순회 1회 stack 2개
 
-  console.log(cases);
 
-  return answer;
-}
-
+////// 만들었던 코드 
+// 수식에 포함된 연산자 종류를 받아 해당 종류가 가질 수 있는 모든 경우의 수 계산 후 반환
 function createCase(cases, string, arr) {
   if (arr.length == 0) {
     cases.push(string);
@@ -50,4 +45,65 @@ function createCase(cases, string, arr) {
     tempArr.splice(i, 1);
     createCase(cases, temp, tempArr);
   }
+}
+
+*/
+
+const priorityList = [
+    '-*+'.split(""),
+    '-+*'.split(""),
+    '*-+'.split(""),
+    '*+-'.split(""),
+    '+-*'.split(""),
+    '+*-'.split(""),
+];
+
+function solution(expression) {
+    var answer = -1;
+    for(let i=0; i<priorityList.length; i++){
+        let value = Math.abs(calc(expression, priorityList[i]));
+        if(answer < value) answer = value;
+    }
+    return answer;
+}
+
+function calc(expression, priority){
+    let result = 0, numStack=[], operStack=[];
+    
+    let temp = "";
+    for(let i=0; i<expression.length; i++){
+        if(expression[i] >= '0' && expression[i] <= '9'){ //숫자
+            temp += expression[i]; 
+        }else{ // 연산자
+            numStack.push(Number(temp));
+            temp="";
+            
+            if(operStack.length == 0){
+                operStack.push(expression[i]);
+            }else{
+                // 우선 순위 판별 array.indexof(oper)
+                while(priority.indexOf(operStack[operStack.length-1]) >= priority.indexOf(expression[i])){
+                    let b = numStack.pop(); 
+                    let a = numStack.pop(); 
+                    numStack.push(calculate(a, b, operStack.pop()));
+                }
+                operStack.push(expression[i]);
+            }
+        }
+    }
+    numStack.push(Number(temp));
+    
+    while(operStack.length != 0){
+        let b = numStack.pop(); 
+        let a = numStack.pop(); 
+        numStack.push(calculate(a, b, operStack.pop()));
+    }
+    // console.log(numStack)
+    return numStack[0];
+}
+
+function calculate(a, b, oper){
+    if(oper == '+') return a+b;
+    if(oper == '-') return a-b;
+    if(oper == '*') return a*b;
 }

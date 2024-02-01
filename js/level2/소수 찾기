@@ -1,4 +1,54 @@
+// 해결 0 
 
+// 신버전 풀이
+/*
+문제
+종이에 적힌 숫자로 만들 수 있는 모든 경우의 수 중 소수는 몇개인가
+
+조건
+매개변수 : numbers 주어진 숫자 문자열
+1. numbers의 길이는 1~7
+2. numbers의 숫자는 0~9
+
+풀이
+모든 경우의 수를 봐야하기 때문에 완전 탐색
+dfs가 편할 듯
+밑의 노드로가면서 만들어진 숫자 중 소수면 set에 추가
+return set.size 하면 소수의 수 
+
+*/
+
+function solution(numbers) {
+    let set = new Set();
+    dfs("", numbers.split(""), set);
+    return set.size;
+}
+
+function dfs(string, numberArr, set){
+    if(prime(+string)) set.add(Number(string));
+    for(let i=0; i<numberArr.length; i++){
+        let temp = [...numberArr];
+        let num = temp.splice(i, 1);
+        dfs(string+num, temp, set);
+    }
+}
+
+function prime(num){
+    console.log(num)
+    if(num <= 1) return false;
+    for(let i=2; i<=Math.sqrt(num); i++){
+        if(num%i === 0) return false;
+    }
+    return true;
+}
+
+
+
+
+
+
+
+ // 예전 풀이
 var split_arr = null;
 
 function solution(numbers) {

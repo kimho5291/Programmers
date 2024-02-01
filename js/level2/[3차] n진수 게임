@@ -27,4 +27,42 @@ ex: 2진수 면 0, 1, 1, 0, 1, 1, 1 ~~
 그냥 for문 돌면서 index 늘려가면서 차례 생각해서 answer에 추가해주면 될것같은데
 종료를 answer.length == t와 같으면
 
+
+// 다른 사람 풀이
+다른 사람의 풀이를 보니깐 간편하게 풀어서 정리함
+1. t 길이 만큼의 배열 선언 후 안에 내용을 튜브가 말해야하는 순서를 적어놓음 .map((a,i)=>i*m+p-1);
+2. string을 마지막 나올 숫자만큼 roof 하면서 string에 전부 n 진주로 변화해서 넣기
+3. 선언한 배열 내 작성해 놓은 순서를 string 위치꺼를 꺼내와서 return하기...
+간단스 .. 다른 거 해야하는거면 이런 공식화 도 생각해보자 간단한 공식
+
+
 */
+// 최초풀이 => 통과 => O(N)
+function solution(n, t, m, p) {
+    var answer = '';
+    let i=0; // 현재 수
+    let count = 0;
+    while(answer.length < t){
+        let string = i.toString(n);
+        // console.log(string);
+        for(let j=0; j<string.length; j++){
+            count = count+1 >= m ? 0 : count+1;
+            if(count % m == p ) answer += string[j].toUpperCase();
+            if(count==0 && m == p ) answer += string[j].toUpperCase();
+            if(answer.length == t) break;
+        }
+        i++;
+    }
+    return answer;
+}
+
+// 다른 사람 풀이
+function solution(n, t, m, p) {
+    var tubeT = Array.apply(null,Array(t)).map((a,i)=>i*m+p-1);
+    var line = '';
+    var max = m*t + p;
+    for (var i =0;line.length <= max; i++) {
+        line += i.toString(n);
+    }
+    return tubeT.map(a=>line[a]).join('').toUpperCase();
+}

@@ -1,0 +1,103 @@
+// 
+
+/*
+문제
+스카피는 코스요리 메뉴를 만들려고하는데 손님이 시켰던 내역을 확인하여
+단품으로 제일 잘 나가는 것을 만들고자 한다. (코스요리 : 단품 2가지 이상)
+단, 결과는 오름차순으로 정렬된 문자열로 반환
+
+조건
+매개변수 : orders 손님들의 주문 내역, course 스카피가 만드고자하는 코스요리의 단품 요리 수
+1. 메뉴는 A~Z
+2. order length 1~20
+3. order 의 원소 길이 2~20 ,, only 대문자, 중복된 문자 없음
+4. course 1~10
+5. course의 원소 길이 2~10 ,, 자연수 ,, 오름차순으로 정렬되어 있음, 중복된 숫자 없음
+6. 만들어진 코드 list는 오름차순 정렬,, 그 안에 있는 문자열도 오름차순 -> return은 1차원 배열
+[ string, seting ] 구조
+
+풀이
+1. obj형으로 단품 별 주문 횟수 저장 => 단품 명 : number
+2. count로 정렬
+3. 완전 탐색으로 course의 수가 될 때마다 만들어진 문자열 오름차순 해서 set에 저장
+4. set -> array 변경 후 오름차순 -> return
+
+아 문제를 잘 못 이해했다 
+단품으로 보는게 아니라 사람들이 주문한 내역을 완전 탐색으로 돌아서 
+ABCD 면 AB AC AD BC BD CD ABC ABD ACD BCD ABCD 이렇게 나와야한다. 한 주문에서 완전 탐생이었던 것...
+
+set, 완전 탐색 등등 해서 풀었는데 실패는 뜨지않는다 시간초과만 뜬다
+시간을 많이 잡아먹는 부붙 최적화만 하면 될 것으로 예상
+
+최적화 부분 dfs 에서 course 마지막 요소보다 길이가 길변 return
+또한, sort가 제일 신경 쓰였으네 sort를 전부하는게 아니라
+메뉴 코스요리 길이로 따로 obj를 만들어서 sort면 될 것으로 예상한다.
+
+*/
+// 초기 풀이 => 60 => 시간초과
+function solution(orders, course) {
+    return select(search(orders, course), course);
+}
+
+function select(list, course){
+    let arr = [];
+    
+    for(let i=0; i<course.length; i++){
+        
+        let temp = []
+        for(let j=0; j<list.length; j++){
+            if(list[j][0].length == course[i]){
+                if(temp.length == 0) temp.push(list[j]);
+                else{
+                    if(temp[0][1] == list[j][1]) temp.push(list[j]);
+                }
+            }
+        }
+        //console.log(course[i], temp)
+        for(let j=0; j<temp.length; j++){
+            arr.push(temp[j][0])
+        }
+    }
+    
+    return arr.sort();
+}
+
+function search(orders, course){
+    let obj = {}, arr = [];
+    for(let i=0; i<orders.length; i++){
+        let set = new Set();
+        dfs([], orders[i], set, course)
+        let setArr = [...set];
+        //console.log(i, setArr)
+        for(let j=0; j<setArr.length; j++){
+            !(obj[setArr[j]]|0) ? obj[setArr[j]] = 1 : obj[setArr[j]]++;
+        }
+    }
+
+    for(let key in obj){
+        if(obj[key] < 2) continue;
+        arr.push([key, obj[key]]);
+    }
+        
+    arr.sort((a,b) => {
+        if(a[0].length<b[0].length) return -1;
+        else if(a[0].length==b[0].length){
+            if(a[1]<=b[1]) return 1;
+            else return -1;
+        }else{
+            return 1;
+        }
+    });
+    return arr;
+}
+
+function dfs(stringArr, order, set, course){
+    if(stringArr.length > course[course.length-1]) return;
+    if(course.indexOf(stringArr.length) != -1) set.add(stringArr.sort().join(""));
+    
+    for(let i=0; i<order.length; i++){
+        if(!stringArr.includes(order[i])){
+            dfs([...stringArr, order[i]], order, set, course)
+        }
+    }  
+}

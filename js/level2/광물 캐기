@@ -1,0 +1,67 @@
+// 해결 0
+
+/*
+문제
+현재 가진 곡괭이로 광물을 캤을 경우 최소치의 피로도를 구해라
+곡괭이 : 다이아, 철, 돌
+광물 : 다이아, 철, 돌
+
+조건
+매개변수 : picks곡괭이 리스트, minerals 광물 리스트
+1. picks 는 [diamond, iron, stone] 구조이며 각 원소는 0~5 , 최소 1개는 가지고 있음
+2. minerals는 길이는 5~50 이며 원소의 종류는 diamond, iron, stone
+3. 다이아 곡괭이는 피로도 1, 1, 1
+    철 곡괭이는 피로도 5, 1, 1
+    동 곡괭이는 피로도 25, 5, 1
+                    dia, iron, stone
+
+풀이
+종합한 이후 백트레킹
+5개 씩 광물을 보면서 내가 가진 3개의 곡괭이를 전부 값을 구한다.
+광물 list의 length 만큼 돌리거나 곡괭이를 다쓸때까지 돌리기
+
+*/
+// 최초풀이 => 통과
+function solution(picks, minerals) {
+    let list = calc(minerals), arr = [];
+    comb(list, picks, 0, list.length, 0, arr);
+    arr.sort((a,b) => a-b);
+    return arr[0];
+}
+
+function comb(origin, picks, index, r, min, arr){
+    if((picks[0]+picks[1]+picks[2]) == 0 || r == 0) {
+        arr.push(min);
+        return;
+    }
+    for(let i=0; i<picks.length; i++){
+        if(picks[i] == 0) continue;
+        picks[i]--;
+        comb(origin, [...picks], index+1, r-1, min+origin[index][i], arr);
+        picks[i]++;
+    }
+}
+
+function calc(minerals){
+    let answer = [], dis=[0, 0, 0];
+    for(let i=0; i<minerals.length; i++){
+        if(minerals[i] == "diamond"){
+            dis[1] += 5;
+            dis[2] += 25;
+        }else if(minerals[i] == "iron"){
+            dis[1] += 1;
+            dis[2] += 5;
+        }else {
+            dis[1] += 1;
+            dis[2] += 1;
+        }
+        dis[0] += 1;
+        
+        if((i+1)%5 == 0) {
+            answer.push(dis);
+            dis=[0, 0, 0];
+        }
+    }
+    if(dis[0] > 0) answer.push(dis);
+    return answer;
+}

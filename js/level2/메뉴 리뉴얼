@@ -33,6 +33,17 @@ set, 완전 탐색 등등 해서 풀었는데 실패는 뜨지않는다 시간�
 또한, sort가 제일 신경 쓰였으네 sort를 전부하는게 아니라
 메뉴 코스요리 길이로 따로 obj를 만들어서 sort면 될 것으로 예상한다.
 
+다름 사람의 풀이를 해설해본 결과 
+dfs(부르트포스)를 course 별로 돌리면된다.
+2면 2길이가 2까지 3이면 3까지 ... 그러면 부르트포스가 확 준다.
+
+내 코드의 문제가 브루트 포스에서 문제가 있었다.
+브루트 포스에서 백트레킹으로 변경하고 풀이완료 하였다.
+사람들은 브루트 포스에서도 풀었다고 하는데 나는 안된다.
+내 dfs에서 불필요한 사항이 많은 것으로 사료됨
+
+
+
 */
 // 초기 풀이 => 60 => 시간초과
 function solution(orders, course) {
@@ -100,4 +111,47 @@ function dfs(stringArr, order, set, course){
             dfs([...stringArr, order[i]], order, set, course)
         }
     }  
+}
+
+
+//// 백트래킹 
+// 백트래킹 조건, 겹치는 사항이 없어야한다.
+
+function solution(orders, course) {
+    var answer = [];
+    orders = orders.map(e => e.split("").sort().join(""));
+    //console.log(orders)
+    
+    for(let i=0; i<course.length; i++){
+        let obj = {}, max = 0;
+        for(let j=0; j<orders.length; j++){
+            let arr = [];
+            comb(orders[j], 0, course[i], "", arr)
+            for(let k=0; k<arr.length; k++){
+                !(obj[arr[k]]|0) ? obj[arr[k]] = 1 : obj[arr[k]]++;
+            }
+            for(let key in obj){
+                if(max < obj[key]) max = obj[key];
+            }
+        }
+        
+        if(max < 2) continue;
+        for(let key in obj){
+            if(obj[key] == max) answer.push(key);
+        }
+        
+    }
+    return answer.sort();
+}
+
+
+function comb(order, start, r, string, arr){
+    if(r == 0){
+        arr.push(string);
+        return;
+    }
+    
+    for(let i=start; i<order.length; i++){
+        comb(order, i+1, r-1, string+order[i], arr);
+    }
 }

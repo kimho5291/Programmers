@@ -1,0 +1,42 @@
+
+
+백트레킹
+
+백트레킹은 완전탐색에서 진행되는 탐색 기법이다.
+이미 들렸던 곳은 다시 들리지 않는 조건을 주면서 탐색의 경우의 수를 줄여주는 기법이다.
+
+ex) 1, 2, 3, 4 로만들수 있는 모든 경위의 수는 ? 중복은 안된다.
+
+1자리 
+1, 2, 3, 4
+
+2자리수 
+12, 13, 14, 23, 24, 34
+
+3자리수
+123, 124, 234
+
+4자리수 
+1234
+
+코드
+function solution() {
+  let array = [1, 2, 3, 4];
+  total = [];
+  let visited = array.map(() => false);
+  comb(array, total, visited, 0, 4, 4, "");
+  console.log(total);
+}
+
+function comb(array, total, visited, start, r, n, string) {
+  if (r < 0 || start > n) return;
+  if (string.length > 0) total.push(string);
+
+  for (let i = start; i < array.length; i++) {
+    visited[i] = true;
+    comb(array, total, visited, i + 1, r - 1, n, string + array[i]);
+    visited[i] = false;
+  }
+}
+
+solution();

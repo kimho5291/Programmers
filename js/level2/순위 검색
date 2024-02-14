@@ -47,6 +47,17 @@ info에서 얻은 정보와 아무거나 들어갈 수 있는 "-"를 포함하�
 딕셔너리를 만들어서 하는경우가 생각보다 많은것같다
 어찌보면 제일 단순한 방법이기도 ..
 
+info에서 얻을 수 있는 모든 경우의 수 를 다 만들고 인원수를 체크하기 위해서 
+경위의 수를 key로 놓고 score를 arr로 해서 넣어준다.
+
+
+방법
+1. info 원소가 가실 수 있는 모든 경우의수 만들기 -> 완전탐색 -> 점수는 따로 가지고있기
+2. 모든 info를 돌렸으면 해당 경우의 수에 있는 점수를 정렬하기 오름
+3. query를 돌면서 해당하는 경우의 수를 찾기 -> 이진탐색 => 조건을 가지고 key를 찾으면 되고 
+    점수를 이진탐색으로 찾는다,, 그리고 이후 값은 어짜피 전부다 큰 녀석이니깐
+    arr.length - 찾은 index를 해주면 인원이 나온다!!
+4. 배열 return
 
 
 */
@@ -134,4 +145,78 @@ function queryParse(query){
     }
     
     return result;
+}
+
+
+/////////// 변경 풀이 => 통과 => 효율성 최대 970ms
+
+function solution(info, query) {
+
+    let dictionary = createDictionary(info);
+    for(let key in dictionary){
+        dictionary[key].sort((a,b) => a-b);
+    }
+
+    var answer = [];
+    for(let i=0; i<query.length; i++){
+        let parse = queryParse(query[i]);
+        let score = Number(parse.splice(-1, 1));
+        parse = parse.join("");
+        answer.push(binarySearch(dictionary[parse], score));
+    }
+    return answer;
+}
+
+function binarySearch(arr, value){
+    if(arr == undefined) return 0;
+    
+    let max = arr.length, min = 0;
+    while(max > min){
+        let cur = parseInt((max+min)/2);
+        if(arr[cur] >= value){
+            max = cur;
+        }else{
+            min = cur + 1;
+        }
+    }
+    return arr.length - min;
+}
+
+
+function createDictionary(info){
+    let result = {};
+    for(let i=0; i<info.length; i++){
+        let splitArr = info[i].split(" ");
+        let score = Number(splitArr.splice(-1, 1));
+        dfs("", splitArr, result, score);
+    }
+    return result;
+}
+
+function dfs(string, remain, obj, score){
+    if(remain.length == 0){
+        if(obj[string] == undefined){
+            obj[string] = [];
+        }
+        obj[string].push(score);
+        return;
+    }
+    
+    let splice = remain.splice(0, 1);
+    dfs(string+splice, [...remain], obj, score);
+    dfs(string+"-", [...remain], obj, score);
+}
+
+function queryParse(query){
+    let arr = [];
+    let splitArr = query.split(" and ");
+    for(let j=0; j<splitArr.length; j++){
+        if(j+1 == splitArr.length){
+            let split = splitArr[j].split(" ");
+            split.forEach(e => arr.push(e));
+        }else{
+            arr.push(splitArr[j]);
+        }
+    }
+    return arr;
 }

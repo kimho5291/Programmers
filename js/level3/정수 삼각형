@@ -1,0 +1,71 @@
+
+/*
+문제
+주어진 2차원 배열을 가지고 맨 바닥까지 거쳐 숫자의 합이 가장 큰 경우를 찾아보자
+
+조건
+매개변수 : triangle 삼각형 모양을 만들 수 있는 2차원 배열
+triangle.length : 1~500 => 원소 : 0 ~ 9999
+
+풀이
+triangle의 길이만큼 배열 선언
+dfs로 전부 들어가면서 확인
+floor와 현재 index를 재귀에 넣어 시작
+
+탑 다운으로 가니깐 정답은 맞는것같은데 시간이 너무 소비된다.
+
+해결책
+바텀 업으로 가는데 
+그러면 경우의 수가 2배로 늘어날 것을 대비하여 각 수의 만들어지는 2개의 경우의 수에서 
+큰것만 남기면 경우의 수를 줄일 수 있다.
+
+결국 바텀 업 방식으로 가야 경우의 수를 줄일 수 있다.
+
+triangles을 그대로 사용하면 될 것으로 예상 후 코딩 진행 하지만 효율성에서 시간초과 1개 발생 ;;
+left, right에서 triangle[i][j]를 가져오는게 걸린듯 ;;
+그걸 하나로 줄이니깐 해결함
+-- 그리고 += 으로 하니깐 효율에서 시간초과 많이 뜸 조심하자
+
+
+*/
+// 최초 풀이 => 32.1점 => 시간초과
+function solution(triangle) {
+    var answer = [0];
+    dfs(0, triangle, 0, 0, answer)
+    return answer[0];
+}
+
+function dfs(score, triangle, index, cur, max){
+    if(triangle.length == index){
+        if(max[0] <= score) max[0] = score;
+        return;
+    }
+    dfs(score+triangle[index][cur], triangle, index+1, cur, max);
+    dfs(score+triangle[index][cur], triangle, index+1, cur+1, max);
+}
+
+// 변경한 풀이 => 96.4점 => 효율성 시간초과 1개
+function solution(triangle) {
+    for(let i=triangle.length-2; 0<=i; i--){
+        for(let j=0; j<triangle[i].length; j++){
+            let left = triangle[i][j] + triangle[i+1][j];
+            let right = triangle[i][j] + triangle[i+1][j+1];
+            if(left <= right) triangle[i][j] = right;
+            else triangle[i][j] = left;
+        }
+    }
+    return triangle[0][0];
+}
+
+// 효율성 문제 해결
+function solution(triangle) {
+    for(let i=triangle.length-2; 0<=i; i--){
+        for(let j=0; j<triangle[i].length; j++){
+            let left = triangle[i+1][j];
+            let right = triangle[i+1][j+1];
+            if(left <= right) triangle[i][j] = triangle[i][j]+right;
+            else triangle[i][j] = triangle[i][j]+left;
+        }
+    }
+    return triangle[0][0];
+}

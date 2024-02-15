@@ -1,0 +1,37 @@
+
+/*
+문제
+문자열 before를 가지고 after를 만들 수 있는지 구하시오
+
+조건
+매개변수 : before, after 둘다 문자열 => 0 ~ 1000 ,, 모두 소문자
+
+풀이
+둘다 길이가 간다고 하는데
+before를 순회하면서 obj 채우기
+after를 순회하면서 obj 지우기
+obj의 key가 아무것도 없으면 return 1; else return 0
+
+*/
+
+function solution(before, after) {
+    let obj = {}
+    for(let i=0; i<before.length; i++){
+        if(obj[before[i]] == undefined){
+            obj[before[i]] = 1;
+        }else{
+            obj[before[i]]++;
+        }
+    }
+    
+    for(let i=0; i<after.length; i++){
+        if(obj[after[i]] == undefined){
+            return 0;
+        }else{
+            obj[after[i]]--;
+            if(obj[after[i]] == 0) delete obj[after[i]];
+        }
+    }
+
+    return 1;
+}

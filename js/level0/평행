@@ -1,0 +1,44 @@
+/*
+
+문제
+주어진 4개의 좌표를 가지고 만들 수 있는 2개의 선 중 평행한게 있는지 확인하시오
+있으면 1 없으면 0
+
+조건
+매개변수 : dots 점 4개 좌표
+dots.length : 4
+dots 원소 [x, y] 형태이며 0 ~ 100
+
+풀이
+2개의 좌표로 만들 수 있는 선을 모드 만든다.
+만들 때 겹치는게 있으면 return 1
+하지만 좌표가 겹치면 안되는 것이 조건이다.
+그렇기 때문에 obj에 i, j를 넣고 겹치는 좌표가 없을 때 return 1
+
+
+*/
+//풀이
+function solution(dots) {
+    let arr = [];
+    for(let i=0; i<dots.length; i++){
+        for(let j=i+1; j<dots.length; j++){
+            let slope = getSlope(dots[i][0], dots[i][1], dots[j][0], dots[j][1]);
+            if(check(i, j, slope, arr)) return 1;
+        }
+    }
+    return 0;
+}
+
+function getSlope(x1, y1, x2, y2){
+    return (y2-y1) / (x2-x1);
+}
+
+function check(i, j, slope, arr){
+    for(let k=0; k < arr.length; k++){
+        if(arr[k].i == i || arr[k].i == j) continue;
+        if(arr[k].j == i || arr[k].j == j) continue;
+        if(arr[k].slope == slope) return true;
+    }
+    arr.push({i : i, j : j, slope : slope });
+    return false;
+}

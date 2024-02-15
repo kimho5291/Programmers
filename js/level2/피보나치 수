@@ -13,12 +13,27 @@ n 만큼 arr 만들기
 처음에 들어가는 수는 arr[0] = 0, arr[1] = 1로 하면서 n까지 순회하기
 
 */
-
+// 반복문을 통한 풀이 => 바텀업
 function solution(n) {
     var arr = Array.from({length:n+1}, () => 0);
     arr[1] = 1;
     for(let i=2; i<arr.length; i++){
         arr[i] = (arr[i-1]+arr[i-2])%1234567;
     }
+    return arr[n];
+}
+
+// 재귀를 통한 풀이 => 탑 다운 => 마지막 2개 체점 안됨
+// 럼타임 에러가 뜨는데 stack size ovre 의심
+function solution(n) {
+    var arr = Array.from({length:100001}, () => -1);
+    arr[0] = 0; arr[1] = 1;
+    return fibonacci(n, arr);
+}
+
+function fibonacci(n, arr){
+    if(arr[n] != -1) return arr[n];
+    
+    arr[n] = (fibonacci(n-1, arr) + fibonacci(n-2, arr)) % 1234567;
     return arr[n];
 }

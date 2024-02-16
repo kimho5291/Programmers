@@ -1,0 +1,64 @@
+
+
+/*
+문제
+계속되는 폭우로 일부지역이 물에 잠겼다. 물에 잠기지 않은 지역을 통해 학교를 가는 중
+최단 경로로 갈 수 있는 갯수를 구하시오
+
+조건
+매개변수 : m 가로, n 세로, puddles 물에 잠긴 지역
+m, n length : 1~100 ,, 둘다 1인 경우의 수는 없다.
+puddles : 0~10
+집과 학교는 물에 잠기지 않는다.
+움직임은 아래와 오른쪽으로 만 이동 가능하다.
+집 좌표는 1,1이다. => 좌표가 1,1 2차원 배열로 놓았을 때 0,0 으로 생각하는게 좋다.
+
+움직임은 아래와 오른쪽이기 때문에 최단경로는 다른 경로로 와도 똑같은 값이 나온다.
+결국 나올 수 있는 녀석은 1개이기때문에 obj 사용 필요 없음
+
+
+풀이
+완전 탐색을 하는 재귀를 만든다.
+갔단 길은 다시 갈 필요없음으로 갔던 길은 해당 길에서 몇가지가 가능한지 메모제이션 한다.
+다른 길이 해당길을 지날 때 갔던 길일이면 경우의수를 더해준다.
+그러면 끝 !
+
+// 초기 풀이
+위의 풀이로 진행하였으나 하나의 맵을 사용하는데 문제가 있는 듯함
+그래서 puddlesMap을 따로 만들고 
+메모제이션할 수 있는 array를 따로 만들어서 진해해야할 듯 싶다.
+
+
+
+*/
+// 초기풀이 => 런타임 에러, 시간초과 다뜸 ;; => 10점
+function solution(m, n, puddles) {
+    let map = createMap(m, n, puddles);
+    
+    return dfs(map, 1, 1, 0);
+}
+
+function dfs(map, curX, curY){
+    if(curY == map.length || curX == map[curY].length) return 0;
+    if(map[curY][curX] == -1) return 0;
+    
+    if(map[curY][curX] >= 1) return map[curY][curX];
+    if(map[curY][curX] == -2) return 1;
+    
+    
+    let total = dfs(map, curX+1, curY) + dfs(map, curX, curY+1);
+    
+    map[curY][curX] = total % 1000000007;
+    
+    return map[curY][curX];
+   
+}
+
+function createMap(m, n, puddles){
+    let arr = Array.from({length:n+1}, e => Array.from({length:m+1}, () => 0));
+    arr[n][m] = -2;
+    puddles.forEach(e => {
+        arr[e[0]][e[1]] = -1;
+    });
+    return arr;
+}

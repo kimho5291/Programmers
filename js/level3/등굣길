@@ -29,6 +29,11 @@ puddles : 0~10
 메모제이션할 수 있는 array를 따로 만들어서 진해해야할 듯 싶다.
 
 
+// 풀이
+메모제이션 추가이후 효율성 10ms 이전으로 전부 해결
+DP 중요한거 -> 한번한것은 다시하지 않는 것을 생각하자
+
+
 
 */
 // 초기풀이 => 런타임 에러, 시간초과 다뜸 ;; => 10점
@@ -61,4 +66,40 @@ function createMap(m, n, puddles){
         arr[e[0]][e[1]] = -1;
     });
     return arr;
+}
+
+
+// 메모제이션 추가한 풀이
+// 매개변수로 map을 넘기면 메모리 차지할 것을 염려하여 전역변수로 놓음
+let puddleMap;
+let loadMap;
+
+function solution(m, n, puddles) {
+    puddleMap = createPuddles(m, n, puddles);
+    loadMap = Array.from({length:n+1}, e => Array.from({length:m+1}, () => 0));
+    return check(1, 1, m, n);
+}
+
+function check(x, y, m, n){
+    if(x > m || y > n) return 0;
+    if(isPuddle(x, y)) return 0;
+    
+    if(loadMap[y][x] != 0) return loadMap[y][x];
+    if(x == m && y == n) return 1;
+    
+    let sum = check(x+1, y, m, n) + check(x, y+1, m, n);
+    loadMap[y][x] = sum % 1000000007;
+    return loadMap[y][x];
+}
+
+function createPuddles(m, n, puddles){
+    let arr = Array.from({length:n+1}, e => Array.from({length:m+1}, () => false));
+    puddles.forEach(e => {
+        arr[e[1]][e[0]] = true;
+    });
+    return arr;
+}
+
+function isPuddle(x, y){
+    return puddleMap[y][x];
 }

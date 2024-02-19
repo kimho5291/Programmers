@@ -1,0 +1,168 @@
+
+/*
+문제
+n개의 송전탑이 전선을 통해 트리형태로 구성되어 있다.
+만들어진 전력망을 2개로 분할하려고 한다. 분할할 때 최대한 비슷한 숫자를 가지게 하자.
+
+조건
+매개변수 : n 송전탑 수, wires 전력망 정보
+n : 2~100
+wires = n-1
+- [v1,v2] 형식 => v1과 v2는 연결되어 있다는 뜻
+- 1 <= v1 < v2 <= n ==> 왼쪽이 더 작다는 뜻
+- 전력망이 하나가 아닌 것은 주어지지 않는다.
+
+풀이
+우선 트리제작
+유니온 find로 풀고자 하니깐 
+이번엔 최상위 부모를 찾는게 아닌 트리 구조를 만들면서 rank를 만들면됨
+k의 부모 rank = 자식들의 rank + 하면됨
+
+1. 부모와 자식을 연결해준다.
+2. 부모의 최상단 부모를 찾으면서 rank를 1씩 더해준다.
+3. 트리구조를 전부 만든다.
+4. 트리 구조를 돌면서 [left(부모-자식 rank), right(자신의 rank)]를 만들면서 차가 제일 작은 것을 찾는다.
+4-1 그게 정답이다.
+
+rank를 하려고하는데 포기
+그냥 union으로 트리를 만들고
+dfs로 자신 포함 node가 몇개 있는지 확인한 후에 Math.abs((n-자신) - 자신)가 제일 작은 걸로
+
+계속 풀어보면서 느낀점
+먼저 wires에 들어온대로 트리를 생성할 때 작은 수가 부모로 놓으면 트리 생성이 안된다.
+테케 5, [[1, 2], [1, 3], [4, 5], [1, 5]], 1 의 경우 
+4,5할 때 4를 부모로 놓고 rank를 올렸는데 1, 5가 나오면서 4-5 트리를 5-4 트리로 변경해줘야하는 예외상황 발생
+그래서 이런방식으로 할꺼면
+union에서 find할 때 부모를 찾는게 아니라 내 부모가 있는데 내가 연결되면 
+내가 부모로 변경된다던가 하는 로직이 추가되어야함 => 부모를 찾고 자신과 swap 하면 될듯 ? => 여기도 
+구멍이 있을 것으로 예상 
+
+
+일단 문제를 보면 최대 100개의 array이 이기 때문에 사람들은 
+하나씩 삭제해보면서 bfs, dfs, 혹은 union-find를 사용함
+
+나는 하나씩 삭제해보면서 
+2개의 트리를 숫자가 낮은 것을 부모로 두고 경로압축을 통해 size를 구하여
+최대 작은 수를 찾도록한다.
+
+
+// 변경 풀이
+unionFind 바이 랭크로 해결
+
+1. wires를 전부 순회한다 => for i
+2. wires 를 전부 순회한다. => for j
+3. i==j continue 한다.
+4. union을 한다.
+4-1. 2node의 root를 찾는다.
+4-2. rank가 큰쪽에 작은쪽이 붙는다. => 큰쪽 rank += 작은 rank
+5. parents의 index와 값이 index와 같으면 => root라면
+6. temp에 push => 결국 2개만 push됨
+7. 큰수에서 작은 수를 빼고 answer에 넣기
+8. 전부 끝났을 때 answer를 오름차순으로 정렬
+9. 첫번째 index가 제일 작은 수
+
+
+
+테케
+5, [[1, 2], [1, 3], [4, 5], [1, 5]], 1
+9, [[1,3],[2,3],[3,4],[4,5],[4,6],[5,8],[7,8],[7,9]], 1
+5, [[3, 4], [4, 5], [2, 3], [1, 2]], 1
+6, [[1, 2], [3, 4], [5, 6], [1, 3], [3, 5]], 2
+*/
+
+// 이전 트리를 전부 만들고 rank의 차가 제일 작은 걸로 정답을 구하는 코드
+// 30.8점 => 위에 설명한 트리를 재정렬해주지 않아서 문제 발생
+function solution(n, wires) {
+    let parents = Array.from({length:n+1}, (e,i) => i);
+    let rank = Array.from({length:n+1}, () => 1);
+    //console.log(parents, rank)
+    
+    for(let i=0; i<wires.length; i++){
+        union(parents, rank, wires[i][0], wires[i][1]);
+    }
+    
+    console.log(parents, rank)
+    
+    let min = 1000;
+    for(let i=1; i<parents.length; i++){
+        let temp = Math.abs((n-rank[i]) - rank[i]);
+        console.log(i, n-rank[i], rank[i], temp)
+        if(min >= temp) min = temp;
+    }
+    return min;
+}
+
+function union(parents, rank, node1, node2){
+    let node1par = find(parents, node1);
+    let node2par = find(parents, node2);
+    
+    if(rank[node1par] >= rank[node2par]){
+        parents[node2] = node1;
+        rankUp(parents, rank, node1, rank[node2])
+    }
+    else if(rank[node1par] < rank[node2par]){
+        parents[node1] = node2;
+        rankUp(parents, rank, node2, rank[node1])
+    }
+    
+}
+
+function find(parents, node){
+    if(parents[node] == node) return node;
+    return find(parents, parents[node]);
+}
+
+function rankUp(parents, rank, node, sum){
+    rank[node]+=sum;
+    if(parents[node] == node) return;
+    rankUp(parents, rank, parents[node], sum);
+}
+
+
+
+
+
+// 변경 => union by rank
+function solution(n, wires) {
+    let answer = Array.from({length:n-1}, () => 0);
+    for(let i=0; i<wires.length; i++){
+        let parents = Array.from({length:n+1}, (e,i) => i);
+        let rank = Array.from({length:n+1}, () => 1);
+        
+        for(let j=0; j<wires.length; j++){
+            if(i==j) continue;
+            union(parents, rank, wires[j][0], wires[j][1]);
+        }
+        
+        let temp = [];
+        for(let k=1; k<parents.length; k++){
+            if(parents[k] == k) temp.push(rank[k]);
+        }
+        answer[i] = Math.max(temp[0], temp[1]) - Math.min(temp[0], temp[1]);
+        
+    }
+    
+    answer.sort((a,b) => a-b);
+    console.log(answer)
+    return answer[0];
+}
+
+
+function union(parents, rank, node1, node2){
+    let node1par = find(parents, node1);
+    let node2par = find(parents, node2);
+    
+    if(rank[node1par] >= rank[node2par]){
+        parents[node2par] = node1par;
+        rank[node1par] += rank[node2par];
+    }
+    else if(rank[node1par] < rank[node2par]){
+        parents[node1par] = node2par;
+        rank[node2par] += rank[node1par];
+    }
+}
+
+function find(parents, node){
+    if(parents[node] == node) return node;
+    return find(parents, parents[node]);
+}

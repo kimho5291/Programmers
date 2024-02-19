@@ -17,9 +17,62 @@ computers[i][i]는 무조건 1이다.
 컴퓨터s를 보고 트리를 만들어야할 것으로 예상된다.
 일단 낮은 숫자를 가진 node가 부모로 간다.
 
+자신을 제외하고 자신과 연결되어 있는 computer 순회
+자신과 같은 rank를 가졌으면 자식으로 판단 => 자신이 더 높은 것으로 인식
+모든 computers를 순회를 마치고
+parents에서 자신 index와 같은 부모를 가진 애들만 다른 네트워크로 인식
+
+결론 적으로 하나의 네트워크는 하나의 부모에 전부 모여있는 것으로 그려짐
+
+
+
 테케
 4, [[1,0,0,1],[0,1,1,0],[0,1,1,0],[1,0,0,1]], 2
 4, [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 4
 4, [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]], 1
 4, [[1, 0, 0, 1], [0, 1, 0, 0], [0, 0, 1, 1], [1, 0, 1, 1]] => 2
+
+
+
 */
+
+
+
+function solution(n, computers) {
+    let parents = Array.from({length: n}, (e, i) => i);
+    let rank = Array.from({length: n}, () => 1);
+    console.log(parents, rank)
+    
+    for(let i=0; i<n; i++){
+        for(let j=i+1; j<n; j++){
+            if(computers[i][j] == 1) union(parents, rank, i, j);
+        }
+    }
+    console.log(parents, rank)
+    
+    var answer = 0;
+    for(let i=0; i<parents.length; i++){
+        if(parents[i] == i) answer++;
+    }
+    return answer;
+}
+
+function union(parents, rank, node1, node2){
+    let node1par = find(parents, node1);
+    let node2par = find(parents, node2);
+    
+    
+    if(rank[node1par] > rank[node2par]) {
+        parents[node2par] = node1par;
+    }else if(rank[node1par] < rank[node2par]){
+        parents[node1par] = node2par;
+    }else{
+        parents[node2par] = node1par;
+        rank[node1par]++;
+    }
+}
+
+function find(parents, node){
+    if(parents[node] == node) return node;
+    return find(parents, parents[node]);
+}

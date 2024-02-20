@@ -1,0 +1,111 @@
+// dfs, union find
+
+/*
+문제
+범희가 개발한 카드게임, 카드는 100장 1~100 카드
+2~100 자연수 선택 후 그 범위에 속한 카드를 골라 무작위로 섞는다.
+그걸 뒤집어 가면서 순회하는 그룹을 만들어서 갯수를 센다. => 갯수가 그 그룹의 값
+
+그룹이 1개면 0
+2개 이상이면 2개의 그룹을 곱하여 가장큰 수를 반환하라
+
+조건
+매개변수 : cards 카드 그룹
+cards 길이 : 2~100
+원소범위 : chars 길이의 이하 ex: cards 길이 = 3 이면 0~2
+카드 중복 없음
+cards[i] = i+1번에 담긴 상자
+
+예제 문제를 보니깐 모든 상자의 그룹을 찾아서 제일 큰 수를 찾으면 됨
+모든 그룹 중 가장 큰 수를 찾을 수 있으면 된다는 뜻같음
+
+풀이
+// dfs 풀이
+상자를 열면 몇번 상자를 열어라 라고 나온다.
+결국 순회하는데 방문했던 상자를 열면 return 하는 dfs 이다.
+
+전부 순회하면서 visited 확인하면서 수 올리기
+전부 순회하면 그룹이 몇개 생성된다.
+길이가 1이면 return 0
+길이가 2이상이면 내림차순 정렬 후 0*1 을 해주면 정답
+
+
+// union find
+우선 그래프 만들기
+부모 arr에 다른 부모를 가지고 있어도 root는 하나이다.
+
+그래서 
+그리프를 만들고
+root가 몇개인지로 그룹을 상정할 수 있음
+
+*/
+
+// dfs로 풀이 => 통과
+function solution(cards) {
+    let visited = Array.from({length:cards.length}, () => false);
+    
+    let scores = [];
+    for(let i=0; i<cards.length; i++){
+        let score = dfs(cards, visited, i, 0);
+        if(score != 0) scores.push(score)
+    }
+    
+    //console.log(scores)
+    if(scores.length == 1) return 0;
+    scores.sort((a,b) => b-a);
+    return scores[0] * scores[1];
+    
+}
+
+function dfs(cards, visited, index, count){
+    if(visited[cards[index]-1] == true) return count;
+    visited[cards[index]-1] = true;
+    return dfs(cards, visited, cards[index]-1, count+1)
+}
+
+
+
+// union find 풀이
+function solution(cards) {
+    let parents = Array.from({length:cards.length+1}, (e, i) => i);
+    let rootObj = {}, rootArr = [];
+    
+    // union find 그래프 그리기
+    for(let i=0; i<cards.length; i++){
+        union(parents, i+1, cards[i]);
+    }
+    
+    // 만들어진 그래프를 기준으로 root가 몇개인지 확인하기
+    for(let i=1; i<parents.length; i++){
+        if(rootObj[find(parents, i)] == undefined) rootObj[find(parents, i)] = 1;
+        else rootObj[find(parents, i)]++;
+    }
+
+    // 생성된 map 정렬하기위해 arr로 변경
+    for(let key in rootObj){
+        rootArr.push([key, rootObj[key]])
+    }
+    
+    // 정렬
+    rootArr.sort((a,b) => b[1]-a[1]);
+    
+    // 그룹이 1개면 0, 아니면 최대 값 반환
+    if(rootArr.length == 1) return 0;
+    return rootArr[0][1] * rootArr[1][1];
+}
+
+
+function union(parents, node1, node2){
+    let node1par = find(parents, node1);
+    let node2par = find(parents, node2);
+    
+    if(node1par != node2par){
+        parents[node2par] = node1par;
+    }
+    
+}
+
+function find(parents, node){
+    if(parents[node] == node) return node;
+    return find(parents, parents[node]);
+}

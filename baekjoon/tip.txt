@@ -1,0 +1,10 @@
+입력값 입력 받기
+
+fs(fileSystem) 모듈로 입력받아야함
+
+//code
+const fs = require('fs');
+const input = fs.readFileSync("/dev/stdin").toString().trim().split(" ");
+
+// 문제에 따라 아래는 변경해서 해도됨
+.toString().trim().split(" ").map(Number);
